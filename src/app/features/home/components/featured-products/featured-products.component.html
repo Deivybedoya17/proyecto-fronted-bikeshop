@@ -1,0 +1,30 @@
+<section class="seccion-destacados">
+  <div class="contenedor">
+    <h3 class="titulo-seccion">Productos Destacados</h3>
+
+    @if (loading()) {
+      <div class="mensaje-estado">
+        <span class="material-symbols-outlined girar">sync</span>
+        <p>Cargando bicicletas...</p>
+      </div>
+    } @else if (error()) {
+      <div class="mensaje-estado mensaje-estado--error">
+        <span class="material-symbols-outlined">error</span>
+        <p>{{ error() }}</p>
+      </div>
+    } @else if (bicicletas().length === 0) {
+      <div class="mensaje-estado">
+        <span class="material-symbols-outlined">inventory_2</span>
+        <p>No hay productos disponibles.</p>
+      </div>
+    } @else {
+      <div class="cuadricula-productos">
+        @for (bike of bicicletas(); track bike.id) {
+          @if (bike.activo) {
+            <app-product-card [bicicleta]="bike" />
+          }
+        }
+      </div>
+    }
+  </div>
+</section>

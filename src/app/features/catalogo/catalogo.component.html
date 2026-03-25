@@ -1,0 +1,75 @@
+<div class="pagina-catalogo">
+  <div class="contenedor">
+
+    <!-- Encabezado -->
+    <div class="encabezado-catalogo">
+      <h1 class="titulo-catalogo">Nuestro Catálogo</h1>
+      <p class="subtitulo-catalogo">Explora nuestra colección completa de bicicletas premium</p>
+    </div>
+
+    <!-- Barra de filtros -->
+    <div class="barra-filtros">
+      <!-- Búsqueda -->
+      <div class="campo-busqueda">
+        <span class="material-symbols-outlined icono-busqueda">search</span>
+        <input
+          type="text"
+          class="input-busqueda"
+          placeholder="Buscar por marca, modelo o código..."
+          [ngModel]="busqueda()"
+          (ngModelChange)="actualizarBusqueda($event)"
+        />
+      </div>
+
+      <!-- Filtros de tipo -->
+      <div class="filtros-tipo">
+        <button
+          class="chip-filtro"
+          [class.chip-filtro--activo]="tipoActivo() === ''"
+          (click)="filtrarPorTipo('')"
+        >
+          Todas
+        </button>
+        @for (t of tipos; track t) {
+          <button
+            class="chip-filtro"
+            [class.chip-filtro--activo]="tipoActivo() === t"
+            (click)="filtrarPorTipo(t)"
+          >
+            {{ t }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Contador de resultados -->
+    <p class="contador-resultados">
+      <span class="material-symbols-outlined">inventory_2</span>
+      {{ filtradas().length }} bicicleta{{ filtradas().length !== 1 ? 's' : '' }} encontrada{{ filtradas().length !== 1 ? 's' : '' }}
+    </p>
+
+    <!-- Grid de productos -->
+    @if (loading()) {
+      <div class="mensaje-estado">
+        <span class="material-symbols-outlined girar">sync</span>
+        <p>Cargando catálogo...</p>
+      </div>
+    } @else if (filtradas().length === 0) {
+      <div class="mensaje-estado">
+        <span class="material-symbols-outlined">search_off</span>
+        <h3>No se encontraron resultados</h3>
+        <p>Prueba con otra búsqueda o categoría.</p>
+        <button class="btn-limpiar" (click)="filtrarPorTipo(''); actualizarBusqueda('')">
+          <span class="material-symbols-outlined">refresh</span>
+          Limpiar filtros
+        </button>
+      </div>
+    } @else {
+      <div class="cuadricula-catalogo">
+        @for (bici of filtradas(); track bici.id) {
+          <app-product-card [bicicleta]="bici" />
+        }
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,64 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.panel-control { max-width: 1100px; }
+.titulo-panel { font-size: $font-size-2xl; font-weight: 800; margin-bottom: $spacing-xl; }
+
+.mensaje-carga {
+  display: flex; align-items: center; gap: $spacing-sm;
+  color: $text-secondary; font-size: $font-size-sm;
+}
+
+// Cuadrícula KPI
+.cuadricula-kpi {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+  @include respond-to-lg { grid-template-columns: repeat(4, 1fr); }
+}
+
+.tarjeta-kpi {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-lg;
+  border-radius: $radius-xl;
+  border: 1px solid $border-color;
+  background: $surface;
+  box-shadow: $shadow-sm;
+
+  &--azul   { border-left: 4px solid $primary; .icono-kpi { color: $primary; background: $primary-light; } }
+  &--verde  { border-left: 4px solid #16a34a; .icono-kpi { color: #16a34a; background: #dcfce7; } }
+  &--morado { border-left: 4px solid #9333ea; .icono-kpi { color: #9333ea; background: #f3e8ff; } }
+  &--rojo   { border-left: 4px solid $accent-red; .icono-kpi { color: $accent-red; background: #fef2f2; } }
+  &--gris   { border-left: 4px solid $text-light; .icono-kpi { color: $text-light; background: $bg-light; } }
+}
+
+.icono-kpi {
+  font-size: 1.5rem;
+  padding: $spacing-sm;
+  border-radius: $radius-md;
+  flex-shrink: 0;
+}
+
+.etiqueta-kpi { font-size: $font-size-sm; color: $text-secondary; }
+.valor-kpi { font-size: 1.75rem; font-weight: 900; color: $text-primary; }
+
+// Tabla
+.seccion-panel { margin-top: $spacing-xl; }
+.encabezado-seccion { font-size: $font-size-xl; font-weight: 700; margin-bottom: $spacing-md; }
+.contenedor-tabla { overflow-x: auto; border-radius: $radius-xl; border: 1px solid $border-color; box-shadow: $shadow-sm; }
+.tabla-datos {
+  width: 100%; border-collapse: collapse; font-size: $font-size-sm;
+  background: $surface;
+  th { background: $bg-light; padding: $spacing-sm $spacing-md; text-align: left; font-weight: 700; color: $text-secondary; text-transform: uppercase; font-size: 0.72rem; letter-spacing: .05em; }
+  td { padding: $spacing-sm $spacing-md; border-top: 1px solid $border-color; }
+  tr:hover td { background: #f8fafc; }
+  code { background: $bg-light; border: 1px solid $border-color; border-radius: 4px; padding: 1px 6px; font-size: 0.8rem; }
+}
+.insignia { background: $primary-light; color: $primary; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; border-radius: $radius-full; padding: 2px 8px; letter-spacing: .04em; }
+.texto-rojo { color: $accent-red; font-weight: 700; }
+
+@keyframes girar { to { transform: rotate(360deg); } }
+.girar { animation: girar 1s linear infinite; font-size: 1.25rem; }

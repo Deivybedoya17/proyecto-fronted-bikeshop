@@ -1,0 +1,72 @@
+<div class="ventas">
+  <h2 class="titulo-pagina">Historial de Ventas</h2>
+
+  @if (loading()) {
+    <p class="mensaje-carga"><span class="material-symbols-outlined girar">sync</span> Cargando ventas...</p>
+  } @else if (ventas().length === 0) {
+    <div class="estado-vacio">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <p>No hay ventas registradas todavía.</p>
+    </div>
+  } @else {
+    <div class="contenedor-tabla">
+      <table class="tabla-datos">
+        <thead>
+          <tr>
+            <th>#Venta</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th class="col-acciones">Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (v of ventas(); track v.idVenta) {
+            <tr [class.fila-expandida]="expandido() === v.idVenta">
+              <td><code>{{ v.idVenta | slice:0:8 }}…</code></td>
+              <td>{{ v.nombreUsuario }}</td>
+              <td>{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td><strong>{{ v.totalVenta | currency:'USD' }}</strong></td>
+              <td class="col-acciones">
+                <button class="btn-expandir" (click)="toggleExpandido(v.idVenta)" [class.rotado]="expandido() === v.idVenta">
+                  <span class="material-symbols-outlined">expand_more</span>
+                </button>
+              </td>
+            </tr>
+            <!-- Fila de Detalles Expandible -->
+            @if (expandido() === v.idVenta) {
+              <tr class="fila-detalles-desplegable">
+                <td colspan="5">
+                  <div class="contenedor-subtabla">
+                    <table class="subtabla-datos">
+                      <thead>
+                        <tr>
+                          <th>Bicicleta</th>
+                          <th class="text-right">Cant.</th>
+                          <th class="text-right">Precio Unit.</th>
+                          <th class="text-right">Subtotal</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (d of v.detalles; track d.idDetalleVenta) {
+                          <tr>
+                            <td>
+                              <strong>{{ d.marcaBicicleta }}</strong> - {{ d.nombreBicicleta }}
+                            </td>
+                            <td class="text-right">{{ d.cantidad }}</td>
+                            <td class="text-right">{{ d.precioUnitario | currency:'USD' }}</td>
+                            <td class="text-right font-bold">{{ d.totalDetalle | currency:'USD' }}</td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

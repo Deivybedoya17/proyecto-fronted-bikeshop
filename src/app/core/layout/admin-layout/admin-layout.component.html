@@ -1,0 +1,77 @@
+<div class="contenedor-admin">
+  <!-- Barra Lateral -->
+  <aside class="barra-lateral-admin">
+    <div class="barra-lateral-logo">
+      <span class="material-symbols-outlined">pedal_bike</span>
+      <span>BikeAdmin</span>
+    </div>
+
+    <nav class="nav-lateral">
+      <!-- Principal -->
+      <p class="etiqueta-seccion-lateral">Principal</p>
+      <a routerLink="/admin/dashboard"  routerLinkActive="activo" class="nav-lateral__item">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span>Dashboard</span>
+      </a>
+
+      <!-- Inventario -->
+      <p class="etiqueta-seccion-lateral">Inventario</p>
+      <a routerLink="/admin/inventario" routerLinkActive="activo" class="nav-lateral__item">
+        <span class="material-symbols-outlined">inventory_2</span>
+        <span>Bicicletas</span>
+      </a>
+      <a routerLink="/admin/entradas"   routerLinkActive="activo" class="nav-lateral__item">
+        <span class="material-symbols-outlined">input</span>
+        <span>Entradas</span>
+      </a>
+      <a routerLink="/admin/salidas"    routerLinkActive="activo" class="nav-lateral__item">
+        <span class="material-symbols-outlined">output</span>
+        <span>Salidas / Bajas</span>
+      </a>
+      <a routerLink="/admin/proveedores" routerLinkActive="activo" class="nav-lateral__item">
+        <span class="material-symbols-outlined">local_shipping</span>
+        <span>Proveedores</span>
+      </a>
+
+      <!-- Gestión -->
+      <p class="etiqueta-seccion-lateral">Gestión</p>
+      <a routerLink="/admin/ventas"   routerLinkActive="activo" class="nav-lateral__item">
+        <span class="material-symbols-outlined">point_of_sale</span>
+        <span>Ventas</span>
+      </a>
+      <a routerLink="/admin/usuarios" routerLinkActive="activo" class="nav-lateral__item">
+        <span class="material-symbols-outlined">group</span>
+        <span>Usuarios</span>
+      </a>
+    </nav>
+
+    <div class="pie-barra-lateral">
+      <a routerLink="/" class="nav-lateral__item">
+        <span class="material-symbols-outlined">storefront</span>
+        <span>Ver Tienda</span>
+      </a>
+      <button class="nav-lateral__item cerrar-sesion-lateral" (click)="logout()">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Área Principal -->
+  <div class="principal-admin">
+    <header class="barra-superior-admin">
+      <h1 class="barra-superior-admin__titulo">Panel de Administración</h1>
+      <div class="barra-superior-admin__acciones">
+        <button class="btn-barra-superior">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <a routerLink="/login" class="btn-barra-superior">
+          <span class="material-symbols-outlined">logout</span>
+        </a>
+      </div>
+    </header>
+    <div class="contenido-admin">
+      <router-outlet />
+    </div>
+  </div>
+</div>

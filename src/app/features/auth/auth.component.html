@@ -1,0 +1,93 @@
+<!-- Página de login: diseño dividido (formulario izq, decorativo der) -->
+<div class="pagina-login">
+  <!-- Panel izquierdo -->
+  <div class="panel-login">
+    <a routerLink="/" class="logotipo-login">
+      <span class="material-symbols-outlined">pedal_bike</span>
+      <span>BikeShop</span>
+    </a>
+
+    <div class="caja-login">
+      <h2 class="caja-login__titulo">Bienvenido de vuelta</h2>
+      <p class="caja-login__subtitulo">Ingresa tus credenciales para acceder al panel.</p>
+
+      @if (error()) {
+        <div class="error-login">
+          <span class="material-symbols-outlined">error</span>
+          {{ error() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="formulario-login" novalidate>
+
+        <!-- Nombre de usuario -->
+        <div class="grupo-campo" [class.grupo-campo--error]="userName.invalid && userName.touched">
+          <label class="etiqueta-campo" for="userName">Nombre de usuario</label>
+          <div class="envolvente-input">
+            <span class="material-symbols-outlined icono-input">person</span>
+            <input
+              id="userName"
+              type="text"
+              class="campo-input"
+              formControlName="userName"
+              placeholder="tu_usuario"
+              autocomplete="username"
+            />
+          </div>
+          @if (userName.hasError('required') && userName.touched) {
+            <p class="error-campo">El nombre de usuario es requerido.</p>
+          }
+        </div>
+
+        <!-- Contraseña -->
+        <div class="grupo-campo" [class.grupo-campo--error]="password.invalid && password.touched">
+          <label class="etiqueta-campo" for="password">Contraseña</label>
+          <div class="envolvente-input">
+            <span class="material-symbols-outlined icono-input">lock</span>
+            <input
+              id="password"
+              type="password"
+              class="campo-input"
+              formControlName="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+          </div>
+          @if (password.hasError('required') && password.touched) {
+            <p class="error-campo">La contraseña es requerida.</p>
+          }
+          @if (password.hasError('minlength') && password.touched) {
+            <p class="error-campo">Mínimo 6 caracteres.</p>
+          }
+        </div>
+
+        <!-- Enviar -->
+        <button type="submit" class="btn-login" [disabled]="loading()">
+          @if (loading()) {
+            <span class="material-symbols-outlined girar">sync</span>
+            Iniciando sesión...
+          } @else {
+            Iniciar sesión
+            <span class="material-symbols-outlined">arrow_forward</span>
+          }
+        </button>
+      </form>
+
+      <p class="volver-login">
+        <a routerLink="/">← Volver a la tienda</a>
+      </p>
+      <p class="crear-cuenta-login">
+        ¿No tienes cuenta? <a routerLink="/registro">Crear usuario</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Panel decorativo derecho -->
+  <div class="portada-login">
+    <div class="portada-login__interior">
+      <span class="material-symbols-outlined portada-login__icono">pedal_bike</span>
+      <h3>Panel de Administración</h3>
+      <p>Gestiona tu inventario, ventas y clientes de BikeShop desde un solo lugar.</p>
+    </div>
+  </div>
+</div>

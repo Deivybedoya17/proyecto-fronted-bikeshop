@@ -1,0 +1,85 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+.portada {
+  position: relative;
+  background: $primary; /* Fallback color */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.portada__video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.portada-patron-fondo {
+  position: absolute;
+  inset: 0;
+  /* Dark overlay to ensure text readability over any video */
+  background: rgba(0, 50, 100, 0.4); 
+  /* Maintains the original radial gradient as a subtle light effect */
+  background-image: radial-gradient(circle at 60% 50%, rgba(255,255,255,0.08) 0%, transparent 60%);
+  z-index: 0;
+}
+
+.portada-interior {
+  @include container;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  position: relative;
+  z-index: 1;
+
+  @include respond-to-md {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+.portada-contenido {
+  max-width: 36rem;
+  color: #fff;
+}
+
+.portada__titulo {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: $spacing-lg;
+
+  @include respond-to-md { font-size: 3.5rem; }
+}
+
+.portada__subtitulo {
+  font-size: $font-size-lg;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: $spacing-2xl;
+  line-height: 1.7;
+
+  strong { font-weight: 700; color: #fff; }
+}
+
+.portada__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  background: $accent-red;
+  color: #fff;
+  padding: $spacing-md $spacing-2xl;
+  border-radius: $radius-lg;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  text-decoration: none;
+
+  &:hover { background: $accent-red-dark; }
+  &:active { transform: scale(0.97); }
+}

@@ -1,0 +1,174 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.pagina-catalogo {
+  padding: $spacing-2xl 0 $spacing-3xl;
+  min-height: calc(100vh - 10rem);
+}
+
+.contenedor { @include container; }
+
+// Encabezado
+.encabezado-catalogo {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+}
+
+.titulo-catalogo {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: $primary;
+  margin-bottom: $spacing-sm;
+
+  @include respond-to-md { font-size: 3rem; }
+}
+
+.subtitulo-catalogo {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+// Barra de filtros
+.barra-filtros {
+  background: $surface;
+  border: 1px solid $border-color;
+  border-radius: $radius-2xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  box-shadow: $shadow-sm;
+  @include flex-col;
+  gap: $spacing-md;
+}
+
+.campo-busqueda {
+  position: relative;
+  width: 100%;
+}
+
+.icono-busqueda {
+  position: absolute;
+  left: $spacing-md;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $text-light;
+  pointer-events: none;
+}
+
+.input-busqueda {
+  width: 100%;
+  padding: 0.875rem $spacing-md 0.875rem 3rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-xl;
+  font-size: $font-size-base;
+  font-family: $font-family-base;
+  color: $text-primary;
+  background: $bg-light;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder { color: $text-light; }
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px #{$primary}22;
+    background: $surface;
+  }
+}
+
+.filtros-tipo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.chip-filtro {
+  padding: 0.5rem $spacing-lg;
+  border-radius: $radius-full;
+  border: 1px solid $border-color;
+  background: $surface;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: $font-family-base;
+
+  &:hover {
+    background: $bg-light;
+    border-color: $primary;
+    color: $primary;
+  }
+
+  &--activo {
+    background: $primary;
+    color: #fff;
+    border-color: $primary;
+
+    &:hover {
+      background: $primary-dark;
+      color: #fff;
+    }
+  }
+}
+
+// Contador
+.contador-resultados {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  font-weight: 500;
+  margin-bottom: $spacing-lg;
+
+  .material-symbols-outlined { font-size: 1.1rem; }
+}
+
+// Grid
+.cuadricula-catalogo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+
+  @include respond-to-sm { grid-template-columns: repeat(2, 1fr); }
+  @include respond-to-lg { grid-template-columns: repeat(3, 1fr); }
+  @media (min-width: 80rem) { grid-template-columns: repeat(4, 1fr); }
+}
+
+// Estado vacío / carga
+.mensaje-estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-3xl 0;
+  color: $text-secondary;
+  text-align: center;
+
+  .material-symbols-outlined { font-size: 3.5rem; color: $text-light; }
+  h3 { font-size: $font-size-xl; font-weight: 700; color: $text-primary; }
+  p  { font-size: $font-size-sm; max-width: 24rem; }
+}
+
+.btn-limpiar {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: 0.625rem $spacing-lg;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $primary;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: $spacing-sm;
+  font-family: $font-family-base;
+
+  &:hover { background: $bg-light; }
+}
+
+@keyframes girar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.girar { animation: girar 1s linear infinite; }

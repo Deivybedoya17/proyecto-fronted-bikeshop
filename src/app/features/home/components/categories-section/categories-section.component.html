@@ -1,0 +1,16 @@
+<section class="seccion-categorias">
+  <div class="contenedor">
+    <h3 class="titulo-seccion">Categorías</h3>
+    <div class="cuadricula-categorias">
+      @for (cat of categories; track cat.tipo) {
+        <a routerLink="/catalogo" [queryParams]="{ tipo: cat.tipo }"
+           class="tarjeta-categoria tarjeta-categoria--{{ cat.colorClass }}">
+          <div class="tarjeta-categoria__icono-envolvente">
+            <span class="material-symbols-outlined">{{ cat.icon }}</span>
+          </div>
+          <span class="tarjeta-categoria__etiqueta">{{ cat.label }}</span>
+        </a>
+      }
+    </div>
+  </div>
+</section>

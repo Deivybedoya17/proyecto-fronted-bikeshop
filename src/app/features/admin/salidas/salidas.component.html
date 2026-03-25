@@ -1,0 +1,121 @@
+<div class="salidas">
+  <div class="encabezado-seccion">
+    <h2 class="titulo-pagina">Salidas / Bajas de Inventario</h2>
+    <div class="lado-derecho-encabezado">
+      <button class="btn-agregar" (click)="abrirForm()">
+        <span class="material-symbols-outlined">output</span>
+        Dar de Baja
+      </button>
+    </div>
+  </div>
+
+  <!-- ── FORMULARIO DAR DE BAJA ──────────────── -->
+  @if (showForm()) {
+    <div class="tarjeta-formulario">
+      <h3 class="tarjeta-formulario__titulo">Dar de baja inventario</h3>
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="formulario-salida" novalidate>
+        <div class="fila-formulario">
+          <div class="grupo-campo" [class.grupo-campo--error]="form.get('idBicicleta')!.invalid && form.get('idBicicleta')!.touched">
+            <label class="etiqueta-campo" for="bicicleta">Bicicleta</label>
+            <select id="bicicleta" class="campo-input" formControlName="idBicicleta">
+              <option value="">Selecciona la bicicleta...</option>
+              @for (b of bicicletas(); track b.id) {
+                <option [value]="b.id">{{ b.codigo }} - {{ b.marca }} {{ b.modelo }} (Stock: {{ b.stock }})</option>
+              }
+            </select>
+            @if (form.get('idBicicleta')!.invalid && form.get('idBicicleta')!.touched) {
+              <p class="error-campo">Selecciona una bicicleta válida</p>
+            }
+          </div>
+
+          <div class="grupo-campo" [class.grupo-campo--error]="form.get('cantidad')!.invalid && form.get('cantidad')!.touched">
+            <label class="etiqueta-campo" for="cantidad">Cantidad a dar de baja</label>
+            <input id="cantidad" type="number" class="campo-input" formControlName="cantidad" placeholder="0" />
+            @if (form.get('cantidad')!.invalid && form.get('cantidad')!.touched) {
+              <p class="error-campo">La cantidad debe ser mayor a 0</p>
+            }
+          </div>
+        </div>
+        
+        <div class="fila-formulario">
+          <div class="grupo-campo grupo-campo--completo" [class.grupo-campo--error]="form.get('observacion')!.invalid && form.get('observacion')!.touched">
+            <label class="etiqueta-campo" for="observacion">Observación o Motivo</label>
+            <input id="observacion" type="text" class="campo-input" formControlName="observacion" placeholder="Ej. Garantía, defecto de fábrica..." />
+            @if (form.get('observacion')!.invalid && form.get('observacion')!.touched) {
+              <p class="error-campo">La observación es obligatoria</p>
+            }
+          </div>
+        </div>
+
+        <div class="acciones-formulario">
+          <button type="button" class="btn-cancelar" (click)="cerrarForm()">Cancelar</button>
+          <button type="submit" class="btn-guardar" [disabled]="saving()">
+            @if (saving()) {
+              <span class="material-symbols-outlined girar">sync</span>
+              Procesando...
+            } @else {
+              <span class="material-symbols-outlined">delete_sweep</span>
+              Confirmar Baja
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- ── TABLA DE SALIDAS ────────────────────── -->
+  @if (loading()) {
+    <p class="mensaje-carga"><span class="material-symbols-outlined girar">sync</span> Cargando salidas...</p>
+  } @else if (items().length === 0) {
+    <div class="estado-vacio">
+      <span class="material-symbols-outlined">output</span>
+      <p>No hay salidas registradas.</p>
+    </div>
+  } @else {
+    <div class="contenedor-tabla">
+      <table class="tabla-datos">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Venta Asociada</th>
+            <th>Bicicleta</th>
+            <th>Cantidad</th>
+            <th>Usuario</th>
+            <th>Tipo/Obs.</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of items(); track s.idSalida) {
+            <tr>
+              <td>{{ s.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                @if (s.idVenta) {
+                  <span class="chip-venta" title="{{ s.idVenta }}">
+                    <span class="material-symbols-outlined icono-venta">receipt_long</span>
+                    {{ s.idVenta | slice:0:8 }}…
+                  </span>
+                } @else {
+                  <span class="sin-venta">—</span>
+                }
+              </td>
+              <td><code>{{ s.codigoBicicleta }}</code></td>
+              <td><span class="chip-cantidad">-{{ s.cantidad }}</span></td>
+              <td>{{ s.nombreUsuario }}</td>
+              <td>
+                <div class="celda-obs">
+                  <span class="badge-tipo" [class.badge-venta]="s.tipoSalida === 'VENTA'" [class.badge-baja]="s.tipoSalida === 'BAJA'">
+                    {{ s.tipoSalida }}
+                  </span>
+                  @if (s.observacion) {
+                    <span class="texto-obs">{{ s.observacion }}</span>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,153 @@
+<!-- Página de registro: diseño dividido (formulario izq, decorativo der) -->
+<div class="pagina-registro">
+  <!-- Panel izquierdo -->
+  <main class="panel-registro">
+    <a routerLink="/" class="logotipo-registro">
+      <div class="logotipo-registro__icono-envolvente">
+        <span class="material-symbols-outlined">directions_bike</span>
+      </div>
+      <span>BikeShop</span>
+    </a>
+
+    <div class="caja-registro">
+      <div class="caja-registro__encabezado">
+        <h1 class="caja-registro__titulo">Crear nuevo usuario</h1>
+        <p class="caja-registro__subtitulo">Ingresa los datos del nuevo administrador.</p>
+      </div>
+
+      @if (error()) {
+        <div class="error-registro">
+          <span class="material-symbols-outlined">error</span>
+          {{ error() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="formulario-registro" novalidate>
+
+        <!-- Nombre de usuario -->
+        <div class="grupo-campo" [class.grupo-campo--error]="usuario.invalid && usuario.touched">
+          <label class="etiqueta-campo" for="usuario">Nombre de usuario</label>
+          <div class="envolvente-input">
+            <span class="material-symbols-outlined icono-input">person</span>
+            <input
+              id="usuario"
+              type="text"
+              class="campo-input"
+              formControlName="usuario"
+              placeholder="p. ej. juanperez"
+              autocomplete="username"
+            />
+          </div>
+          @if (usuario.hasError('required') && usuario.touched) {
+            <p class="error-campo">El nombre de usuario es requerido.</p>
+          }
+          @if (usuario.hasError('minlength') && usuario.touched) {
+            <p class="error-campo">Mínimo 3 caracteres.</p>
+          }
+        </div>
+
+        <!-- Documento de identidad -->
+        <div class="grupo-campo" [class.grupo-campo--error]="document.invalid && document.touched">
+          <label class="etiqueta-campo" for="document">Documento de identidad</label>
+          <div class="envolvente-input">
+            <span class="material-symbols-outlined icono-input">badge</span>
+            <input
+              id="document"
+              type="text"
+              class="campo-input"
+              formControlName="document"
+              placeholder="Número de identificación"
+            />
+          </div>
+          @if (document.hasError('required') && document.touched) {
+            <p class="error-campo">El documento es requerido.</p>
+          }
+          @if (document.hasError('minlength') && document.touched) {
+            <p class="error-campo">Mínimo 5 caracteres.</p>
+          }
+        </div>
+
+        <!-- Teléfono -->
+        <div class="grupo-campo">
+          <label class="etiqueta-campo" for="telefono">Teléfono</label>
+          <div class="envolvente-input">
+            <span class="material-symbols-outlined icono-input">call</span>
+            <input
+              id="telefono"
+              type="tel"
+              class="campo-input"
+              formControlName="telefono"
+              placeholder="+57 300 000 0000"
+            />
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="grupo-campo" [class.grupo-campo--error]="password.invalid && password.touched">
+          <label class="etiqueta-campo" for="password">Contraseña</label>
+          <div class="envolvente-input">
+            <span class="material-symbols-outlined icono-input">lock</span>
+            <input
+              id="password"
+              [type]="showPass() ? 'text' : 'password'"
+              class="campo-input"
+              formControlName="password"
+              placeholder="••••••••"
+              autocomplete="new-password"
+            />
+            <button type="button" class="btn-ver-pass" (click)="togglePassword()">
+              <span class="material-symbols-outlined">
+                {{ showPass() ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+          @if (password.hasError('required') && password.touched) {
+            <p class="error-campo">La contraseña es requerida.</p>
+          }
+          @if (password.hasError('minlength') && password.touched) {
+            <p class="error-campo">Mínimo 6 caracteres.</p>
+          }
+        </div>
+
+        <!-- Enviar -->
+        <button type="submit" class="btn-registro" [disabled]="loading()">
+          @if (loading()) {
+            <span class="material-symbols-outlined girar">sync</span>
+            Creando usuario...
+          } @else {
+            Crear usuario
+            <span class="material-symbols-outlined">arrow_forward</span>
+          }
+        </button>
+      </form>
+
+      <p class="volver-registro">
+        <a routerLink="/login">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Volver al inicio de sesión
+        </a>
+      </p>
+    </div>
+
+    <!-- Pie -->
+    <div class="pie-registro">
+      <p>© 2024 BikeShop. Todos los derechos reservados.</p>
+    </div>
+  </main>
+
+  <!-- Panel decorativo derecho -->
+  <aside class="portada-registro">
+    <div class="portada-registro__fondo"></div>
+    <div class="portada-registro__interior">
+      <div class="portada-registro__icono-envolvente">
+        <span class="material-symbols-outlined portada-registro__icono">directions_bike</span>
+      </div>
+      <h2>Panel de Administración</h2>
+      <p>Gestiona tu inventario, ventas y clientes de BikeShop desde un solo lugar.</p>
+      <div class="portada-registro__indicador">
+        <span class="portada-registro__punto"></span>
+        <span>Sistemas Operativos</span>
+      </div>
+    </div>
+  </aside>
+</div>

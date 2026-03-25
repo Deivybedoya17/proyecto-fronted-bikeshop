@@ -1,0 +1,39 @@
+<article class="tarjeta-producto">
+  <!-- Imagen -->
+  <div class="tarjeta-producto__img-envolvente" style="position: relative; overflow: hidden;">
+    <img [src]="'images/bicicletas/' + bicicleta().tipo.toLowerCase() + '.png'" 
+         (error)="imgError.style.display='flex'; imgSuccess.style.display='none'"
+         #imgSuccess
+         [alt]="bicicleta().modelo" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 1;" />
+    
+    <div #imgError class="tarjeta-producto__img-placeholder" style="display: none; position: relative; z-index: 0;">
+      <span class="material-symbols-outlined">pedal_bike</span>
+    </div>
+
+    <span class="tarjeta-producto__etiqueta" style="z-index: 2;">
+      {{ bicicleta().tipo }}
+    </span>
+  </div>
+
+
+  <!-- Info -->
+  <div class="tarjeta-producto__cuerpo">
+    <span class="tarjeta-producto__categoria">{{ bicicleta().tipo }}</span>
+    <h4 class="tarjeta-producto__nombre">{{ bicicleta().marca }} {{ bicicleta().modelo }}</h4>
+    <p class="tarjeta-producto__codigo">Cód: {{ bicicleta().codigo }}</p>
+    <div class="tarjeta-producto__fila-precio">
+      <span class="tarjeta-producto__precio">{{ bicicleta().valorUnitario | currency:'USD':'symbol':'1.2-2' }}</span>
+      @if (bicicleta().stock <= 5 && bicicleta().stock > 0) {
+        <span class="tarjeta-producto__alerta-stock">¡Solo {{ bicicleta().stock }} disponibles!</span>
+      }
+    </div>
+    <button
+      class="tarjeta-producto__btn"
+      (click)="agregarAlCarrito()"
+      [disabled]="bicicleta().stock === 0"
+    >
+      <span class="material-symbols-outlined">shopping_cart</span>
+      {{ bicicleta().stock > 0 ? 'Agregar al carrito' : 'Sin stock' }}
+    </button>
+  </div>
+</article>

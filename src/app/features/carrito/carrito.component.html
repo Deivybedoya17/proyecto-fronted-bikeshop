@@ -1,0 +1,98 @@
+<div class="pagina-carrito">
+  <div class="contenedor">
+    <h2 class="titulo-pagina">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      Mi Carrito
+    </h2>
+
+    @if (success()) {
+      <!-- Estado de éxito -->
+      <div class="carrito-exito">
+        <span class="material-symbols-outlined icono-exito">check_circle</span>
+        <h3>¡Compra realizada con éxito!</h3>
+        <p>Tu pedido ha sido procesado. Gracias por comprar en BikeShop.</p>
+        <a routerLink="/catalogo" class="btn-primario">Seguir comprando</a>
+      </div>
+
+    } @else if (carrito.items().length === 0) {
+      <!-- Estado vacío -->
+      <div class="carrito-vacio">
+        <span class="material-symbols-outlined">remove_shopping_cart</span>
+        <h3>No tienes productos en tu carrito</h3>
+        <p>Explora nuestro catálogo y encuentra tu bicicleta ideal.</p>
+        <a routerLink="/catalogo" class="btn-primario">Ver catálogo</a>
+      </div>
+
+    } @else {
+      <!-- Lista de items -->
+      <div class="disposicion-carrito">
+        <div class="items-carrito">
+          @for (item of carrito.items(); track item.bicicleta.id) {
+            <div class="item-carrito">
+              <div class="item-carrito__img">
+                <span class="material-symbols-outlined">pedal_bike</span>
+              </div>
+              <div class="item-carrito__info">
+                <p class="item-carrito__tipo">{{ item.bicicleta.tipo }}</p>
+                <h4 class="item-carrito__nombre">{{ item.bicicleta.marca }} {{ item.bicicleta.modelo }}</h4>
+                <p class="item-carrito__precio">{{ item.bicicleta.valorUnitario | currency:'USD' }}</p>
+              </div>
+              <div class="item-carrito__cantidad">
+                <button (click)="carrito.actualizarCantidad(item.bicicleta.id, item.cantidad - 1)" class="btn-cantidad">
+                  <span class="material-symbols-outlined">remove</span>
+                </button>
+                <span class="valor-cantidad">{{ item.cantidad }}</span>
+                <button (click)="carrito.actualizarCantidad(item.bicicleta.id, item.cantidad + 1)" class="btn-cantidad">
+                  <span class="material-symbols-outlined">add</span>
+                </button>
+              </div>
+              <p class="item-carrito__subtotal">
+                {{ item.bicicleta.valorUnitario * item.cantidad | currency:'USD' }}
+              </p>
+              <button class="item-carrito__eliminar" (click)="carrito.remover(item.bicicleta.id)">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Resumen del pedido -->
+        <aside class="resumen-carrito">
+          <h3 class="titulo-resumen">Resumen de pedido</h3>
+
+          <div class="fila-resumen">
+            <span>Subtotal ({{ carrito.count() }} items)</span>
+            <span>{{ carrito.total() | currency:'USD' }}</span>
+          </div>
+          <div class="fila-resumen">
+            <span>Envío</span>
+            <span class="texto-verde">Gratis</span>
+          </div>
+          <div class="fila-resumen fila-resumen--total">
+            <span>Total</span>
+            <span>{{ carrito.total() | currency:'USD' }}</span>
+          </div>
+
+          @if (error()) {
+            <div class="error-resumen">
+              <span class="material-symbols-outlined">error</span>
+              {{ error() }}
+            </div>
+          }
+
+          <button class="btn-finalizar" (click)="checkout()" [disabled]="loading()">
+            @if (loading()) {
+              <span class="material-symbols-outlined girar">sync</span>
+              Procesando...
+            } @else {
+              Finalizar compra
+              <span class="material-symbols-outlined">arrow_forward</span>
+            }
+          </button>
+
+          <a routerLink="/catalogo" class="volver-resumen">← Seguir comprando</a>
+        </aside>
+      </div>
+    }
+  </div>
+</div>

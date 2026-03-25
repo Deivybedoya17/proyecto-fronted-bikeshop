@@ -1,0 +1,138 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.contenedor-admin {
+  display: flex;
+  min-height: 100vh;
+  background: $bg-light;
+}
+
+// =============================================
+// Barra Lateral
+// =============================================
+.barra-lateral-admin {
+  width: 15rem;
+  background: $bg-dark;
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.barra-lateral-logo {
+  @include flex-between;
+  gap: $spacing-sm;
+  padding: $spacing-xl $spacing-lg;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: $font-size-xl;
+  font-weight: 800;
+  color: $primary;
+
+  .material-symbols-outlined { font-size: 1.75rem; }
+}
+
+.etiqueta-seccion-lateral {
+  padding: $spacing-md $spacing-lg $spacing-xs;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #64748b;
+}
+
+.nav-lateral {
+  padding: $spacing-md 0;
+  flex: 1;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: 0.75rem $spacing-lg;
+    color: #94a3b8;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    width: 100%;
+    cursor: pointer;
+
+    &:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+    }
+
+    &.activo {
+      color: #fff;
+      border-left-color: $primary;
+      background: rgba(#0057a8, 0.2);
+    }
+
+    .material-symbols-outlined { font-size: 1.25rem; }
+  }
+}
+
+.pie-barra-lateral {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: $spacing-md 0;
+}
+
+.cerrar-sesion-lateral {
+  font-family: $font-family-base;
+}
+
+// =============================================
+// Lado Derecho (Barra superior + Contenido)
+// =============================================
+.principal-admin {
+  flex: 1;
+  @include flex-col;
+  min-width: 0;
+}
+
+.barra-superior-admin {
+  @include flex-between;
+  padding: $spacing-md $spacing-xl;
+  background: $surface;
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: $z-header;
+
+  &__titulo {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $text-primary;
+  }
+
+  &__acciones {
+    display: flex;
+    gap: $spacing-sm;
+  }
+}
+
+.btn-barra-superior {
+  @include flex-center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: $radius-full;
+  background: transparent;
+  color: $text-secondary;
+  transition: background 0.2s;
+  border: none;
+
+  &:hover { background: $bg-light; }
+}
+
+.contenido-admin {
+  padding: $spacing-xl;
+  flex: 1;
+}

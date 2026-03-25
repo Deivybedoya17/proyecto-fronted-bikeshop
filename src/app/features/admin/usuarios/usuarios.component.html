@@ -1,0 +1,50 @@
+<div class="usuarios">
+  <h2 class="titulo-pagina">Gestión de Usuarios</h2>
+
+  @if (loading()) {
+    <p class="mensaje-carga">
+      <span class="material-symbols-outlined girar">sync</span> Cargando usuarios...
+    </p>
+  } @else if (usuarios().length === 0) {
+    <div class="estado-vacio">
+      <span class="material-symbols-outlined">group_off</span>
+      <p>No hay usuarios registrados.</p>
+    </div>
+  } @else {
+    <div class="contenedor-tabla">
+      <table class="tabla-datos">
+        <thead>
+          <tr><th>Usuario</th><th>Documento</th><th>Teléfono</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+          @for (u of usuarios(); track u.idUsuario) {
+            <tr [class.fila-inactiva]="!u.activo">
+              <td><code>{{ u.userName }}</code></td>
+              <td>{{ u.document }}</td>
+              <td>{{ u.telefono }}</td>
+              <td><span class="insignia insignia--rol">{{ u.rolNombre }}</span></td>
+              <td>
+                <span class="punto-estado"
+                  [class.punto-estado--activo]="u.activo"
+                  [class.punto-estado--inactivo]="!u.activo">
+                  {{ u.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="celda-acciones">
+                <button class="btn-accion btn-accion--alternar" (click)="cambiarEstado(u)"
+                  [title]="u.activo ? 'Desactivar' : 'Activar'">
+                  <span class="material-symbols-outlined">
+                    {{ u.activo ? 'toggle_on' : 'toggle_off' }}
+                  </span>
+                </button>
+                <button class="btn-accion btn-accion--peligro" (click)="eliminar(u.idUsuario)" title="Eliminar">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

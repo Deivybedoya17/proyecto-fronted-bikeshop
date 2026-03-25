@@ -1,0 +1,109 @@
+<div class="entradas">
+  <div class="encabezado-seccion">
+    <h2 class="titulo-pagina">Entradas de Inventario</h2>
+    <div class="lado-derecho-encabezado">
+      <button class="btn-agregar" (click)="abrirForm()">
+        <span class="material-symbols-outlined">add</span>
+        Registrar Entrada
+      </button>
+    </div>
+  </div>
+
+  <!-- ── FORMULARIO INGRESAR STOCK ───────────── -->
+  @if (showForm()) {
+    <div class="tarjeta-formulario">
+      <h3 class="tarjeta-formulario__titulo">Nueva Entrada a Inventario</h3>
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="formulario-entrada" novalidate>
+        <div class="fila-formulario">
+          <div class="grupo-campo" [class.grupo-campo--error]="form.get('idProveedor')!.invalid && form.get('idProveedor')!.touched">
+            <label class="etiqueta-campo" for="proveedor">Proveedor</label>
+            <select id="proveedor" class="campo-input" formControlName="idProveedor">
+              <option value="">Selecciona el proveedor...</option>
+              @for (p of proveedores(); track p.idProveedor) {
+                <option [value]="p.idProveedor">{{ p.nombre }}</option>
+              }
+            </select>
+            @if (form.get('idProveedor')!.invalid && form.get('idProveedor')!.touched) {
+              <p class="error-campo">Selecciona un proveedor válido</p>
+            }
+          </div>
+
+          <div class="grupo-campo grupo-campo--completo">
+            <h4 class="subtitulo-items">Bicicletas a ingresar</h4>
+            <div formArrayName="items" class="lista-items-entrada">
+              @for (itemCtrl of itemsFormArray.controls; track $index) {
+                <div [formGroupName]="$index" class="fila-formulario fila-item">
+                  <div class="grupo-campo" [class.grupo-campo--error]="itemCtrl.get('idBicicleta')!.invalid && itemCtrl.get('idBicicleta')!.touched">
+                    <label class="etiqueta-campo" [for]="'bici-' + $index">Bicicleta</label>
+                    <select [id]="'bici-' + $index" class="campo-input" formControlName="idBicicleta">
+                      <option value="">Selecciona la bicicleta...</option>
+                      @for (b of bicicletas(); track b.id) {
+                        <option [value]="b.id">{{ b.codigo }} - {{ b.marca }} {{ b.modelo }}</option>
+                      }
+                    </select>
+                  </div>
+
+                  <div class="grupo-campo" [class.grupo-campo--error]="itemCtrl.get('cantidad')!.invalid && itemCtrl.get('cantidad')!.touched">
+                    <label class="etiqueta-campo" [for]="'cant-' + $index">Cantidad</label>
+                    <input [id]="'cant-' + $index" type="number" class="campo-input" formControlName="cantidad" placeholder="0" />
+                  </div>
+
+                  <button type="button" class="btn-remover-item" (click)="removerItem($index)" [disabled]="itemsFormArray.length === 1" title="Quitar bicicleta">
+                    <span class="material-symbols-outlined">delete</span>
+                  </button>
+                </div>
+              }
+            </div>
+            <button type="button" class="btn-agregar-item" (click)="agregarItem()">
+              <span class="material-symbols-outlined">add_circle</span> Añadir otra bicicleta
+            </button>
+          </div>
+        </div>
+
+        <div class="acciones-formulario">
+          <button type="button" class="btn-cancelar" (click)="cerrarForm()">Cancelar</button>
+          <button type="submit" class="btn-guardar" [disabled]="saving()">
+            @if (saving()) {
+              <span class="material-symbols-outlined girar">sync</span>
+              Guardando...
+            } @else {
+              <span class="material-symbols-outlined">save</span>
+              Confirmar Entrada
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- ── TABLA HISTORIAL ─────────────────────── -->
+  @if (loading()) {
+    <p class="mensaje-carga"><span class="material-symbols-outlined girar">sync</span> Cargando entradas...</p>
+  } @else if (items().length === 0) {
+    <div class="estado-vacio">
+      <span class="material-symbols-outlined">inbox</span>
+      <p>No hay entradas registradas.</p>
+    </div>
+  } @else {
+    <div class="contenedor-tabla">
+      <table class="tabla-datos">
+        <thead>
+          <tr><th>Fecha</th><th>Bicicleta</th><th>Marca</th><th>Cantidad</th><th>Proveedor</th><th>Usuario</th></tr>
+        </thead>
+        <tbody>
+          @for (e of items(); track e.idEntrada) {
+            <tr>
+              <td>{{ e.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td><code>{{ e.codigoBicicleta }}</code></td>
+              <td>{{ e.marcaBicicleta }}</td>
+              <td><span class="chip-cantidad">+{{ e.cantidad }}</span></td>
+              <td>{{ e.nombreProveedor }}</td>
+              <td>{{ e.nombreUsuario }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

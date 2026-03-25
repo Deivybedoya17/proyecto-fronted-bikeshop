@@ -1,0 +1,44 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.ventas { max-width: 1100px; }
+.titulo-pagina { font-size: $font-size-2xl; font-weight: 800; margin-bottom: $spacing-xl; }
+.mensaje-carga { display: flex; align-items: center; gap: $spacing-sm; color: $text-secondary; font-size: $font-size-sm; }
+.estado-vacio { @include flex-col; align-items: center; gap: $spacing-md; padding: $spacing-3xl 0; color: $text-secondary; .material-symbols-outlined { font-size: 3rem; } }
+.contenedor-tabla { overflow-x: auto; border-radius: $radius-xl; border: 1px solid $border-color; box-shadow: $shadow-sm; }
+.tabla-datos {
+  width: 100%; border-collapse: collapse; font-size: $font-size-sm; background: $surface;
+  th { background: $bg-light; padding: $spacing-sm $spacing-md; text-align: left; font-weight: 700; color: $text-secondary; text-transform: uppercase; font-size: 0.72rem; letter-spacing: .05em; }
+  td { padding: $spacing-sm $spacing-md; border-top: 1px solid $border-color; }
+  tr:hover td { background: #f8fafc; }
+  code { background: $bg-light; border: 1px solid $border-color; border-radius: 4px; padding: 1px 6px; font-size: 0.8rem; font-family: monospace; }
+  tr.fila-expandida td { background: #f8fafc; border-bottom: none; }
+  
+  .col-acciones { width: 50px; text-align: center; }
+  .btn-expandir {
+    background: transparent; border: none; cursor: pointer; color: $text-secondary;
+    @include flex-center; padding: 4px; border-radius: 50%; transition: all 0.2s;
+    &:hover { background: #e2e8f0; color: $primary; }
+    &.rotado .material-symbols-outlined { transform: rotate(180deg); }
+    .material-symbols-outlined { transition: transform 0.3s ease; }
+  }
+
+  /* Sub-tabla desplegable */
+  .fila-detalles-desplegable {
+    td { padding: 0 $spacing-md $spacing-md; background: #f8fafc; border-top: none; }
+  }
+  .contenedor-subtabla {
+    background: white; border-radius: $radius-md; border: 1px solid $border-color;
+    padding: $spacing-sm; margin-top: -$spacing-xs; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .subtabla-datos {
+    width: 100%; border-collapse: collapse; font-size: 0.8rem;
+    th { background: white; padding: $spacing-xs $spacing-sm; color: $text-secondary; font-weight: 600; text-transform: none; border-bottom: 1px solid $border-color; }
+    td { padding: $spacing-sm; border: none; border-bottom: 1px dashed $border-color; }
+    tr:last-child td { border-bottom: none; }
+    .text-right { text-align: right; }
+    .font-bold { font-weight: 700; color: $primary; }
+  }
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+.girar { animation: girar 1s linear infinite; }

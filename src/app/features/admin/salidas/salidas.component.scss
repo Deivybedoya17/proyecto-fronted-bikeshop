@@ -1,0 +1,94 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.salidas { width: 100%; max-width: 1100px; }
+
+/* Encabezado */
+.encabezado-seccion {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: $spacing-xl;
+  .titulo-pagina { font-size: $font-size-2xl; font-weight: 800; margin: 0; }
+}
+
+.btn-agregar {
+  @include flex-center; gap: $spacing-xs; background: #ef4444; color: white;
+  padding: $spacing-md $spacing-lg; border-radius: $radius-md; font-weight: 600;
+  border: none; cursor: pointer; transition: background 0.2s;
+  &:hover { background: darken(#ef4444, 10%); }
+  .material-symbols-outlined { font-size: 1.25rem; }
+}
+
+/* Formulario */
+.tarjeta-formulario {
+  background: white; border-radius: $radius-xl; padding: $spacing-xl;
+  box-shadow: $shadow-md; margin-bottom: $spacing-2xl; border: 1px solid $border-color;
+  &__titulo { font-size: $font-size-xl; margin-bottom: $spacing-lg; font-weight: 700; color: #ef4444; padding-bottom: $spacing-md; border-bottom: 2px solid $bg-light; }
+}
+
+.formulario-salida {
+  display: flex; flex-direction: column; gap: $spacing-lg;
+}
+.fila-formulario {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: $spacing-lg;
+}
+
+.grupo-campo {
+  display: flex; flex-direction: column; gap: $spacing-xs;
+  &--completo { grid-column: 1 / -1; }
+  .etiqueta-campo { font-size: $font-size-sm; font-weight: 600; color: $text-secondary; }
+  .campo-input {
+    padding: $spacing-md; border: 1px solid $border-color; border-radius: $radius-md;
+    font-size: $font-size-base; outline: none; transition: border-color 0.2s; background: white;
+    &:focus { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(#ef4444, 0.1); }
+  }
+}
+.error-campo { font-size: 0.75rem; color: #ef4444; margin: 0; }
+.grupo-campo--error .campo-input { border-color: #ef4444; }
+
+.acciones-formulario {
+  display: flex; justify-content: flex-end; gap: $spacing-md; padding-top: $spacing-md;
+  .btn-cancelar {
+    padding: $spacing-sm $spacing-lg; border-radius: $radius-md; background: white;
+    border: 1px solid $border-color; font-weight: 600; cursor: pointer; color: $text-secondary;
+    &:hover { background: $bg-light; }
+  }
+  .btn-guardar {
+    @include flex-center; gap: $spacing-xs; padding: $spacing-sm $spacing-lg;
+    border-radius: $radius-md; background: #ef4444; border: none; font-weight: 600;
+    color: white; cursor: pointer;
+    &:hover:not(:disabled) { background: darken(#ef4444, 10%); }
+    &:disabled { opacity: 0.7; cursor: not-allowed; }
+  }
+}
+
+/* Tabla */
+.mensaje-carga { display: flex; align-items: center; gap: $spacing-sm; color: $text-secondary; }
+.estado-vacio { @include flex-col; align-items: center; gap: $spacing-md; padding: $spacing-3xl 0; color: $text-secondary; .material-symbols-outlined { font-size: 3rem; } }
+.contenedor-tabla { overflow-x: auto; border-radius: $radius-xl; border: 1px solid $border-color; box-shadow: $shadow-sm; }
+
+.tabla-datos {
+  width: 100%; border-collapse: collapse; font-size: $font-size-sm; background: $surface;
+  th { background: $bg-light; padding: $spacing-sm $spacing-md; text-align: left; font-weight: 700; color: $text-secondary; text-transform: uppercase; font-size: 0.72rem; letter-spacing: .05em; }
+  td { padding: $spacing-sm $spacing-md; border-top: 1px solid $border-color; vertical-align: middle; }
+  tr:hover td { background: #f8fafc; }
+  code { background: $bg-light; border: 1px solid $border-color; border-radius: 4px; padding: 1px 6px; font-size: 0.8rem; }
+}
+
+.chip-cantidad { background: #fee2e2; color: #b91c1c; font-weight: 700; border-radius: $radius-full; padding: 2px 10px; font-size: 0.8rem; }
+
+.chip-venta { 
+  display: inline-flex; align-items: center; gap: 4px; background: #e0e7ff; color: #4338ca;
+  padding: 2px 8px; border-radius: $radius-md; font-size: 0.75rem; font-weight: 600; cursor: default;
+  .icono-venta { font-size: 0.9rem; }
+}
+.sin-venta { color: $text-light; font-style: italic; }
+
+.celda-obs { display: flex; flex-direction: column; gap: 4px; }
+.badge-tipo { 
+  align-self: flex-start; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.05em;
+  &.badge-venta { background: #dcfce7; color: #16a34a; }
+  &.badge-baja { background: #fee2e2; color: #b91c1c; }
+}
+.texto-obs { font-size: 0.75rem; color: $text-secondary; font-style: italic; }
+
+@keyframes girar { to { transform: rotate(360deg); } }
+.girar { animation: girar 1s linear infinite; }

@@ -1,0 +1,65 @@
+<div class="panel-control">
+  <h2 class="titulo-panel">Dashboard</h2>
+
+  @if (loading()) {
+    <p class="mensaje-carga"><span class="material-symbols-outlined girar">sync</span> Cargando datos...</p>
+  } @else {
+    <!-- Tarjetas KPI -->
+    <div class="cuadricula-kpi">
+      <div class="tarjeta-kpi tarjeta-kpi--azul">
+        <span class="material-symbols-outlined icono-kpi">pedal_bike</span>
+        <div>
+          <p class="etiqueta-kpi">Bicicletas Activas</p>
+          <p class="valor-kpi">{{ bicicletas().length }}</p>
+        </div>
+      </div>
+      <div class="tarjeta-kpi tarjeta-kpi--verde">
+        <span class="material-symbols-outlined icono-kpi">point_of_sale</span>
+        <div>
+          <p class="etiqueta-kpi">Total Ventas</p>
+          <p class="valor-kpi">{{ ventas().length }}</p>
+        </div>
+      </div>
+      <div class="tarjeta-kpi tarjeta-kpi--morado">
+        <span class="material-symbols-outlined icono-kpi">inventory_2</span>
+        <div>
+          <p class="etiqueta-kpi">Stock Total</p>
+          <p class="valor-kpi">{{ stockTotal }}</p>
+        </div>
+      </div>
+      <div class="tarjeta-kpi" [class.tarjeta-kpi--rojo]="lowStock > 0" [class.tarjeta-kpi--gris]="lowStock === 0">
+        <span class="material-symbols-outlined icono-kpi">warning</span>
+        <div>
+          <p class="etiqueta-kpi">Stock Bajo (&le;5)</p>
+          <p class="valor-kpi">{{ lowStock }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Últimas bicicletas -->
+    <div class="seccion-panel">
+      <h3 class="encabezado-seccion">Últimas bicicletas registradas</h3>
+      <div class="contenedor-tabla">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Código</th><th>Marca</th><th>Modelo</th><th>Tipo</th><th>Precio</th><th>Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (b of bicicletas().slice(0, 5); track b.id) {
+              <tr>
+                <td><code>{{ b.codigo }}</code></td>
+                <td>{{ b.marca }}</td>
+                <td>{{ b.modelo }}</td>
+                <td><span class="insignia">{{ b.tipo }}</span></td>
+                <td>{{ b.valorUnitario | currency:'USD' }}</td>
+                <td [class.texto-rojo]="b.stock <= 5">{{ b.stock }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

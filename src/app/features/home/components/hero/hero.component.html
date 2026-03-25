@@ -1,0 +1,18 @@
+<section class="portada">
+  <video class="portada__video" autoplay loop muted playsinline [muted]="true" oncanplay="this.muted=true">
+    <source src="video/hero-cycling.mp4" type="video/mp4" />
+  </video>
+  <div class="portada-patron-fondo"></div>
+  <div class="contenedor portada-interior">
+    <div class="portada-contenido">
+      <h2 class="portada__titulo">Encuentra tu<br>bicicleta perfecta</h2>
+      <p class="portada__subtitulo">
+        Aprovecha un <strong>25% de descuento</strong> exclusivo y envío gratuito
+        en todos nuestros modelos seleccionados de temporada.
+      </p>
+      <a routerLink="/catalogo" class="portada__cta">
+        Ver catálogo <span class="material-symbols-outlined">chevron_right</span>
+      </a>
+    </div>
+  </div>
+</section>

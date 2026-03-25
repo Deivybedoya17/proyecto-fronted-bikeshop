@@ -1,0 +1,332 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// Diseño dividido a pantalla completa
+.pagina-registro {
+  display: flex;
+  min-height: 100vh;
+}
+
+// =============================================
+// Panel izquierdo (formulario)
+// =============================================
+.panel-registro {
+  width: 100%;
+  @include flex-col;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-2xl $spacing-xl;
+  background: $surface;
+  overflow-y: auto;
+
+  @include respond-to-lg {
+    width: 40%;
+    padding: $spacing-2xl $spacing-3xl;
+  }
+}
+
+.logotipo-registro {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  text-decoration: none;
+  margin-bottom: $spacing-2xl;
+  align-self: flex-start;
+
+  &__icono-envolvente {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgba($primary, 0.1);
+    border-radius: $radius-lg;
+    @include flex-center;
+
+    .material-symbols-outlined { font-size: 1.5rem; color: $primary; }
+  }
+
+  span:last-child {
+    font-size: $font-size-xl;
+    font-weight: 800;
+    color: $primary;
+    letter-spacing: -0.02em;
+  }
+}
+
+.caja-registro {
+  max-width: 26rem;
+  width: 100%;
+  margin: 0 auto;
+
+  &__encabezado { margin-bottom: $spacing-xl; }
+  &__titulo {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: $text-primary;
+    margin-bottom: $spacing-xs;
+    line-height: 1.2;
+  }
+  &__subtitulo {
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    font-weight: 500;
+  }
+}
+
+// Banner de error
+.error-registro {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: $accent-red;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-sm;
+  margin-bottom: $spacing-lg;
+  font-weight: 500;
+
+  .material-symbols-outlined { font-size: 1.1rem; }
+}
+
+// Formulario
+.formulario-registro {
+  @include flex-col;
+  gap: $spacing-lg;
+}
+
+.grupo-campo {
+  @include flex-col;
+  gap: $spacing-xs;
+
+  &--error .campo-input {
+    border-color: $accent-red;
+    &:focus { box-shadow: 0 0 0 3px #{$accent-red}22; }
+  }
+}
+
+.etiqueta-campo {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: $text-primary;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.envolvente-input {
+  position: relative;
+}
+
+.icono-input {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $text-light;
+  font-size: 1.25rem;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+// Cuando el input tiene focus, colorear el icono
+.envolvente-input:focus-within .icono-input {
+  color: $primary;
+}
+
+.campo-input {
+  width: 100%;
+  padding: 0.875rem $spacing-md 0.875rem 2.75rem;
+  border: 1px solid transparent;
+  border-radius: $radius-lg;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  color: $text-primary;
+  background: #f1f5f9;
+  outline: none;
+  transition: all 0.2s;
+
+  &::placeholder { color: $text-light; }
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px #{$primary}22;
+    background: $surface;
+  }
+}
+
+.error-campo {
+  font-size: 0.75rem;
+  color: $accent-red;
+  font-weight: 500;
+}
+
+// Botón ver contraseña
+.btn-ver-pass {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: $text-light;
+  transition: color 0.2s;
+
+  &:hover { color: $text-primary; }
+  .material-symbols-outlined { font-size: 1.25rem; }
+}
+
+// Botón de envío
+.btn-registro {
+  @include flex-center;
+  gap: $spacing-sm;
+  width: 100%;
+  padding: 0.9375rem;
+  background: $primary;
+  color: #fff;
+  font-size: $font-size-base;
+  font-weight: 700;
+  border-radius: $radius-lg;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: $spacing-md;
+  box-shadow: $shadow-sm;
+
+  &:hover:not(:disabled) { background: $primary-dark; }
+  &:active:not(:disabled) { transform: scale(0.97); }
+  &:disabled { opacity: 0.7; cursor: not-allowed; }
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+.girar { animation: girar 1s linear infinite; }
+
+.volver-registro {
+  margin-top: $spacing-xl;
+  text-align: center;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    color: $primary;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+
+    &:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+    .material-symbols-outlined {
+      font-size: 1.125rem;
+      transition: transform 0.2s;
+    }
+    &:hover .material-symbols-outlined { transform: translateX(-4px); }
+  }
+}
+
+.pie-registro {
+  margin-top: auto;
+  padding-top: $spacing-2xl;
+  text-align: center;
+
+  @include respond-to-lg { text-align: left; }
+
+  p {
+    font-size: 0.625rem;
+    color: $text-light;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+  }
+}
+
+// =============================================
+// Panel decorativo derecho
+// =============================================
+.portada-registro {
+  display: none;
+  flex: 1;
+  background: $primary;
+  position: relative;
+  overflow: hidden;
+  @include flex-center;
+
+  @include respond-to-lg { display: flex; }
+
+  &__fondo {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  &__interior {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #fff;
+    padding: $spacing-3xl;
+    max-width: 32rem;
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin: $spacing-lg 0 $spacing-md;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+
+      @media (min-width: 80rem) { font-size: 3rem; }
+    }
+
+    p {
+      font-size: $font-size-lg;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.7;
+    }
+  }
+
+  &__icono-envolvente {
+    width: 6rem;
+    height: 6rem;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    border-radius: $radius-2xl;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    @include flex-center;
+    margin: 0 auto $spacing-lg;
+  }
+
+  &__icono {
+    font-size: 3rem;
+    color: #fff;
+  }
+
+  &__indicador {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-top: $spacing-2xl;
+    padding: $spacing-sm $spacing-lg;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: $radius-full;
+
+    span:last-child {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #fff;
+    }
+  }
+
+  &__punto {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: $radius-full;
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(5, 150, 105, 0.6);
+  }
+}

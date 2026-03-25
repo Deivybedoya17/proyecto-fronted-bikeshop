@@ -1,0 +1,86 @@
+<header class="encabezado-principal">
+  <div class="contenedor interior-encabezado">
+    <!-- Logo -->
+    <a routerLink="/" class="logotipo">
+      <span class="material-symbols-outlined logotipo__icono">pedal_bike</span>
+      <span class="logotipo__texto">BikeShop</span>
+    </a>
+
+    <!-- Buscador (Removido por petición) -->
+
+    <!-- Acciones -->
+    <div class="acciones-encabezado">
+      <a routerLink="/login" class="acciones-encabezado__btn" title="Mi cuenta">
+        <span class="material-symbols-outlined">person</span>
+      </a>
+      <a routerLink="/carrito" class="acciones-encabezado__btn acciones-encabezado__carrito" title="Carrito">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        @if (carrito.count() > 0) {
+          <span class="insignia-carrito">{{ carrito.count() }}</span>
+        }
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="contenido-principal">
+  <router-outlet />
+</main>
+
+<footer class="pie-pagina-principal">
+  <div class="contenedor cuadricula-pie">
+    <!-- Marca -->
+    <div class="pie-marca">
+      <div class="logotipo">
+        <span class="material-symbols-outlined logotipo__icono">pedal_bike</span>
+        <span class="logotipo__texto">BikeShop</span>
+      </div>
+      <p>Somos expertos en ciclismo, ofreciendo las mejores marcas y servicio técnico especializado desde 1995.</p>
+    </div>
+
+    <!-- Enlaces Rápidos -->
+    <div>
+      <h5 class="pie-encabezado">Enlaces Rápidos</h5>
+      <ul class="pie-enlaces">
+        <li><a routerLink="/">Inicio</a></li>
+        <li><a routerLink="/catalogo">Catálogo</a></li>
+        <li><a href="#">Ofertas</a></li>
+        <li><a href="#">Sobre Nosotros</a></li>
+      </ul>
+    </div>
+
+    <!-- Soporte -->
+    <div>
+      <h5 class="pie-encabezado">Soporte</h5>
+      <ul class="pie-enlaces">
+        <li><a href="#">Envíos</a></li>
+        <li><a href="#">Garantía</a></li>
+        <li><a href="#">Preguntas Frecuentes</a></li>
+        <li><a href="#">Términos y Condiciones</a></li>
+      </ul>
+    </div>
+
+    <!-- Contacto -->
+    <div>
+      <h5 class="pie-encabezado">Contacto</h5>
+      <ul class="pie-enlaces pie-enlaces--contacto">
+        <li>
+          <span class="material-symbols-outlined">location_on</span>
+          <span>Av. Ciclista 123, Ciudad de México</span>
+        </li>
+        <li>
+          <span class="material-symbols-outlined">call</span>
+          <span>+52 55 1234 5678</span>
+        </li>
+        <li>
+          <span class="material-symbols-outlined">mail</span>
+          <span>hola&#64;bikeshop.com</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pie-inferior">
+    <p>© 2024 BikeShop. Todos los derechos reservados.</p>
+  </div>
+</footer>

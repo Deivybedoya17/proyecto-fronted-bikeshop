@@ -1,0 +1,46 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+.seccion-destacados {
+  padding: $spacing-3xl 0;
+  background: #f8fafc;
+  border-radius: $radius-2xl;
+  margin-bottom: $spacing-2xl;
+}
+
+.titulo-seccion {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  margin-bottom: $spacing-xl;
+}
+
+.contenedor { @include container; }
+
+.cuadricula-productos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+
+  @include respond-to-sm { grid-template-columns: repeat(2, 1fr); }
+  @include respond-to-lg { grid-template-columns: repeat(3, 1fr); }
+}
+
+.mensaje-estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-3xl 0;
+  color: $text-secondary;
+
+  .material-symbols-outlined { font-size: 3rem; }
+
+  &--error { color: $accent-red; }
+}
+
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.girar { animation: girar 1s linear infinite; }

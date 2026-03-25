@@ -1,0 +1,91 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.proveedores { width: 100%; max-width: 1000px; }
+
+/* Encabezado */
+.encabezado-seccion {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: $spacing-xl;
+  .titulo-pagina { font-size: $font-size-2xl; font-weight: 800; margin: 0; }
+}
+
+.btn-agregar {
+  @include flex-center; gap: $spacing-xs; background: $primary; color: white;
+  padding: $spacing-md $spacing-lg; border-radius: $radius-md; font-weight: 600;
+  border: none; cursor: pointer; transition: background 0.2s;
+  &:hover { background: darken($primary, 10%); }
+  .material-symbols-outlined { font-size: 1.25rem; }
+}
+
+/* Formulario */
+.tarjeta-formulario {
+  background: white; border-radius: $radius-xl; padding: $spacing-xl;
+  box-shadow: $shadow-md; margin-bottom: $spacing-2xl; border: 1px solid $border-color;
+  &__titulo { font-size: $font-size-xl; margin-bottom: $spacing-lg; font-weight: 700; color: $text-primary; padding-bottom: $spacing-md; border-bottom: 2px solid $bg-light; }
+}
+
+.formulario-proveedor {
+  display: flex; flex-direction: column; gap: $spacing-lg;
+}
+.fila-formulario {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: $spacing-lg;
+}
+
+.grupo-campo {
+  display: flex; flex-direction: column; gap: $spacing-xs;
+  .etiqueta-campo { font-size: $font-size-sm; font-weight: 600; color: $text-secondary; }
+  .campo-input {
+    padding: $spacing-md; border: 1px solid $border-color; border-radius: $radius-md;
+    font-size: $font-size-base; outline: none; transition: border-color 0.2s;
+    &:focus { border-color: $primary; box-shadow: 0 0 0 3px rgba($primary, 0.1); }
+  }
+}
+.error-campo { font-size: 0.75rem; color: #ef4444; margin: 0; }
+.grupo-campo--error .campo-input { border-color: #ef4444; }
+
+.acciones-formulario {
+  display: flex; justify-content: flex-end; gap: $spacing-md; padding-top: $spacing-md;
+  .btn-cancelar {
+    padding: $spacing-sm $spacing-lg; border-radius: $radius-md; background: white;
+    border: 1px solid $border-color; font-weight: 600; cursor: pointer; color: $text-secondary;
+    &:hover { background: $bg-light; }
+  }
+  .btn-guardar {
+    @include flex-center; gap: $spacing-xs; padding: $spacing-sm $spacing-lg;
+    border-radius: $radius-md; background: $primary; border: none; font-weight: 600;
+    color: white; cursor: pointer;
+    &:hover:not(:disabled) { background: darken($primary, 10%); }
+    &:disabled { opacity: 0.7; cursor: not-allowed; }
+  }
+}
+
+/* Tabla */
+.mensaje-carga { display: flex; align-items: center; gap: $spacing-sm; color: $text-secondary; }
+.estado-vacio { @include flex-col; align-items: center; gap: $spacing-md; padding: $spacing-3xl 0; color: $text-secondary; .material-symbols-outlined { font-size: 3rem; } }
+.contenedor-tabla { overflow-x: auto; border-radius: $radius-xl; border: 1px solid $border-color; box-shadow: $shadow-sm; }
+.tabla-datos {
+  width: 100%; border-collapse: collapse; font-size: $font-size-sm; background: $surface;
+  th { background: $bg-light; padding: $spacing-sm $spacing-md; text-align: left; font-weight: 700; color: $text-secondary; text-transform: uppercase; font-size: 0.72rem; letter-spacing: .05em; }
+  td { padding: $spacing-sm $spacing-md; border-top: 1px solid $border-color; }
+  tr:hover td { background: #f8fafc; }
+  .fila-inactiva td { opacity: 0.5; }
+}
+
+.punto-estado {
+  display: inline-flex; align-items: center; font-size: 0.75rem; font-weight: 600;
+  border-radius: $radius-full; padding: 2px 10px;
+  &--activo   { background: #dcfce7; color: #16a34a; }
+  &--inactivo { background: #f1f5f9; color: $text-light; }
+}
+
+.celda-acciones { display: flex; gap: $spacing-xs; }
+.btn-accion {
+  width: 2.2rem; height: 2.2rem; border-radius: $radius-md; border: 1px solid $border-color;
+  background: $surface; cursor: pointer; @include flex-center; transition: all 0.2s;
+  .material-symbols-outlined { font-size: 1.1rem; }
+  &--editar:hover { background: #fef3c7; border-color: #fde68a; color: #d97706; }
+  &--alternar:hover { background: #eff6ff; border-color: #bfdbfe; color: $primary; }
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+.girar { animation: girar 1s linear infinite; }

@@ -1,0 +1,203 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+// =============================================
+// Encabezado Principal
+// =============================================
+.encabezado-principal {
+  position: sticky;
+  top: 0;
+  z-index: $z-header;
+  background: $surface;
+  border-bottom: 1px solid $border-color;
+
+  .interior-encabezado {
+    @include container;
+    @include flex-between;
+    gap: $spacing-md;
+    height: 5rem;
+  }
+}
+
+// Logotipo
+.logotipo {
+  @include flex-between;
+  gap: $spacing-sm;
+  flex-shrink: 0;
+  text-decoration: none;
+
+  &__icono {
+    color: $primary;
+    font-size: 2.5rem;
+  }
+
+  &__texto {
+    font-size: $font-size-2xl;
+    font-weight: 800;
+    color: $primary;
+    letter-spacing: -0.02em;
+  }
+}
+
+// Barra de búsqueda
+.barra-busqueda {
+  flex: 1;
+  max-width: 40rem;
+  position: relative;
+  display: none;
+
+  @include respond-to-md {
+    display: block;
+  }
+
+  &__icono {
+    position: absolute;
+    left: $spacing-sm;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-light;
+    pointer-events: none;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.625rem $spacing-md 0.625rem 2.5rem;
+    border: 1px solid $border-color;
+    border-radius: $radius-xl;
+    background: $bg-light;
+    font-size: $font-size-sm;
+    font-family: $font-family-base;
+    color: $text-primary;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+
+    &::placeholder { color: $text-light; }
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px #{$primary}22;
+    }
+  }
+}
+
+// Acciones del encabezado
+.acciones-encabezado {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: $radius-full;
+    color: $text-secondary;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover {
+      background: $bg-light;
+      color: $primary;
+    }
+  }
+
+  &__carrito {
+    position: relative;
+  }
+}
+
+.insignia-carrito {
+  position: absolute;
+  top: 0.125rem;
+  right: 0.125rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  background: $accent-red;
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: $radius-full;
+  @include flex-center;
+}
+
+// =============================================
+// Contenido Principal
+// =============================================
+.contenido-principal {
+  min-height: calc(100vh - 5rem);
+}
+
+// =============================================
+// Pie de Página
+// =============================================
+.pie-pagina-principal {
+  background: #f8fafc;
+  border-top: 1px solid $border-color;
+  padding-top: $spacing-3xl;
+  padding-bottom: $spacing-xl;
+}
+
+.cuadricula-pie {
+  @include container;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-2xl;
+  margin-bottom: $spacing-2xl;
+
+  @include respond-to-md {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.pie-marca {
+  p {
+    margin-top: $spacing-md;
+    color: $text-secondary;
+    line-height: 1.7;
+    font-size: $font-size-sm;
+  }
+}
+
+.pie-encabezado {
+  font-weight: 700;
+  margin-bottom: $spacing-lg;
+  color: $text-primary;
+}
+
+.pie-enlaces {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+
+  a {
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    transition: color 0.2s;
+    &:hover { color: $primary; }
+  }
+
+  &--contacto li {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+
+    .material-symbols-outlined {
+      color: $primary;
+      font-size: 1rem;
+      margin-top: 2px;
+    }
+  }
+}
+
+.pie-inferior {
+  @include container;
+  padding-top: $spacing-lg;
+  border-top: 1px solid $border-color;
+  text-align: center;
+  color: $text-light;
+  font-size: $font-size-sm;
+}
