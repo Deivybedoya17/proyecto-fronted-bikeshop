@@ -134,6 +134,18 @@
   @if (!cargando() && pestanaActiva() === 'ventas' && ventas()) {
     <div class="panel-reporte" role="tabpanel">
 
+      <!-- Botones de exportación -->
+      <div class="exportar-grupo">
+        <button class="btn-exportar btn-exportar--pdf" (click)="exportarVentasPdf()">
+          <span class="material-symbols-outlined">picture_as_pdf</span>
+          Exportar PDF
+        </button>
+        <button class="btn-exportar btn-exportar--excel" (click)="exportarVentasExcel()">
+          <span class="material-symbols-outlined">table_view</span>
+          Exportar Excel
+        </button>
+      </div>
+
       <!-- KPIs rápidos -->
       <div class="cuadricula-kpi cuadricula-kpi--3cols">
         <div class="kpi kpi--azul">
@@ -211,6 +223,18 @@
   <!-- ══════════════════════════════════════════════════════════════════════ -->
   @if (!cargando() && pestanaActiva() === 'inventario' && inventario()) {
     <div class="panel-reporte" role="tabpanel">
+
+      <!-- Botones de exportación -->
+      <div class="exportar-grupo">
+        <button class="btn-exportar btn-exportar--pdf" (click)="exportarInventarioPdf()">
+          <span class="material-symbols-outlined">picture_as_pdf</span>
+          Exportar PDF
+        </button>
+        <button class="btn-exportar btn-exportar--excel" (click)="exportarInventarioExcel()">
+          <span class="material-symbols-outlined">table_view</span>
+          Exportar Excel
+        </button>
+      </div>
 
       <div class="cuadricula-kpi cuadricula-kpi--3cols">
         <div class="kpi kpi--azul">
@@ -324,6 +348,18 @@
   <!-- ══════════════════════════════════════════════════════════════════════ -->
   @if (!cargando() && pestanaActiva() === 'movimientos' && movimientos()) {
     <div class="panel-reporte" role="tabpanel">
+
+      <!-- Botones de exportación -->
+      <div class="exportar-grupo">
+        <button class="btn-exportar btn-exportar--pdf" (click)="exportarMovimientosPdf()">
+          <span class="material-symbols-outlined">picture_as_pdf</span>
+          Exportar PDF
+        </button>
+        <button class="btn-exportar btn-exportar--excel" (click)="exportarMovimientosExcel()">
+          <span class="material-symbols-outlined">table_view</span>
+          Exportar Excel
+        </button>
+      </div>
 
       <div class="cuadricula-kpi cuadricula-kpi--2cols">
         <div class="kpi kpi--verde">

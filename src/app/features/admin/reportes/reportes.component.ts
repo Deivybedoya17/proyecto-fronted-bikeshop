@@ -110,4 +110,29 @@ export class ReportesComponent implements OnInit {
     d.setDate(1);
     return d.toISOString().split('T')[0];
   }
+
+  // ── Exportación PDF / Excel ─────────────────────────────────────────────
+  exportarVentasPdf(): void {
+    this.svc.exportarVentasPdf(this.fechaInicio, this.fechaFin);
+  }
+
+  exportarVentasExcel(): void {
+    this.svc.exportarVentasExcel(this.fechaInicio, this.fechaFin);
+  }
+
+  exportarInventarioPdf(): void {
+    this.svc.exportarInventarioPdf();
+  }
+
+  exportarInventarioExcel(): void {
+    this.svc.exportarInventarioExcel();
+  }
+
+  exportarMovimientosPdf(): void {
+    this.svc.exportarMovimientosPdf(this.fechaInicio, this.fechaFin);
+  }
+
+  exportarMovimientosExcel(): void {
+    this.svc.exportarMovimientosExcel(this.fechaInicio, this.fechaFin);
+  }
 }

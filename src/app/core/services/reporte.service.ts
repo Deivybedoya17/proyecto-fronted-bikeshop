@@ -142,4 +142,77 @@ export class ReporteService {
   movimientosInventario(fechaInicio: string, fechaFin: string): Observable<ReporteMovimientosResponse> {
     return of({ ...MOCK_MOVIMIENTOS }).pipe(delay(600));
   }
+
+  // ── Exportación PDF / Excel ─────────────────────────────────────────────
+
+  exportarVentasPdf(fechaInicio: string, fechaFin: string): void {
+    this.descargarArchivo(
+      `${this.baseUrl}/ventas/export/pdf`,
+      { fechaInicio, fechaFin },
+      'reporte-ventas.pdf'
+    );
+  }
+
+  exportarVentasExcel(fechaInicio: string, fechaFin: string): void {
+    this.descargarArchivo(
+      `${this.baseUrl}/ventas/export/excel`,
+      { fechaInicio, fechaFin },
+      'reporte-ventas.xlsx'
+    );
+  }
+
+  exportarInventarioPdf(): void {
+    this.descargarArchivo(
+      `${this.baseUrl}/inventario/export/pdf`,
+      {},
+      'reporte-inventario.pdf'
+    );
+  }
+
+  exportarInventarioExcel(): void {
+    this.descargarArchivo(
+      `${this.baseUrl}/inventario/export/excel`,
+      {},
+      'reporte-inventario.xlsx'
+    );
+  }
+
+  exportarMovimientosPdf(fechaInicio: string, fechaFin: string): void {
+    this.descargarArchivo(
+      `${this.baseUrl}/movimientos/export/pdf`,
+      { fechaInicio, fechaFin },
+      'reporte-movimientos.pdf'
+    );
+  }
+
+  exportarMovimientosExcel(fechaInicio: string, fechaFin: string): void {
+    this.descargarArchivo(
+      `${this.baseUrl}/movimientos/export/excel`,
+      { fechaInicio, fechaFin },
+      'reporte-movimientos.xlsx'
+    );
+  }
+
+  // ── Helper privado para descarga binaria ────────────────────────────────
+  private descargarArchivo(url: string, queryParams: Record<string, string>, filename: string): void {
+    let params = new HttpParams();
+    for (const [key, value] of Object.entries(queryParams)) {
+      params = params.set(key, value);
+    }
+
+    this.http.get(url, { params, responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+      },
+      error: (err) => {
+        console.error(`Error descargando ${filename}:`, err);
+        alert(`No se pudo descargar ${filename}. Verifica que el servidor esté corriendo.`);
+      },
+    });
+  }
 }
