@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { BicicletaService } from '../../../core/services/bicicleta.service';
 import { VentaService } from '../../../core/services/venta.service';
 import { BicicletaDtoResponse } from '../../../core/models/bicicleta.dto';
@@ -8,7 +9,7 @@ import { VentaDtoResponse } from '../../../core/models/venta.dto';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

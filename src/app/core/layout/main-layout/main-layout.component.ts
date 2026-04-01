@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { CarritoService } from '../../services/carrito.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -11,4 +12,5 @@ import { CarritoService } from '../../services/carrito.service';
 })
 export class MainLayoutComponent {
   protected readonly carrito = inject(CarritoService);
+  protected readonly auth = inject(AuthService);
 }

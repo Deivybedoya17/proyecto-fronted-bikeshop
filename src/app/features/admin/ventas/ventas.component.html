@@ -1,14 +1,39 @@
 <div class="ventas">
   <h2 class="titulo-pagina">Historial de Ventas</h2>
 
+  <!-- ── FILTROS DE TABLA ───────────── -->
+  <div class="barra-filtros">
+    <div class="filtro-grupo">
+      <label class="filtro-label">Usuario</label>
+      <select class="filtro-select" [(ngModel)]="filterUsuario" (ngModelChange)="aplicarFiltros()">
+        <option value="">Todos</option>
+        @for (u of usuariosUnicos(); track u) {
+          <option [value]="u">{{ u }}</option>
+        }
+      </select>
+    </div>
+    <div class="filtro-grupo">
+      <label class="filtro-label">Desde</label>
+      <input type="date" class="filtro-input" [(ngModel)]="filterFechaInicio" (ngModelChange)="aplicarFiltros()" />
+    </div>
+    <div class="filtro-grupo">
+      <label class="filtro-label">Hasta</label>
+      <input type="date" class="filtro-input" [(ngModel)]="filterFechaFin" (ngModelChange)="aplicarFiltros()" />
+    </div>
+    <button class="filtro-limpiar" (click)="limpiarFiltros()" title="Limpiar filtros">
+      <span class="material-symbols-outlined">filter_alt_off</span>
+    </button>
+  </div>
+
   @if (loading()) {
     <p class="mensaje-carga"><span class="material-symbols-outlined girar">sync</span> Cargando ventas...</p>
-  } @else if (ventas().length === 0) {
+  } @else if (filteredItems().length === 0) {
     <div class="estado-vacio">
       <span class="material-symbols-outlined">receipt_long</span>
-      <p>No hay ventas registradas todavía.</p>
+      <p>No hay ventas registradas o no coinciden con los filtros.</p>
     </div>
   } @else {
+    <p class="resultado-filtro">{{ filteredItems().length }} venta(s) encontrada(s)</p>
     <div class="contenedor-tabla">
       <table class="tabla-datos">
         <thead>
@@ -21,7 +46,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (v of ventas(); track v.idVenta) {
+          @for (v of paginatedItems(); track v.idVenta) {
             <tr [class.fila-expandida]="expandido() === v.idVenta">
               <td><code>{{ v.idVenta | slice:0:8 }}…</code></td>
               <td>{{ v.nombreUsuario }}</td>
@@ -41,7 +66,7 @@
                     <table class="subtabla-datos">
                       <thead>
                         <tr>
-                          <th>Bicicleta</th>
+                          <th class="text-right">Bicicleta</th>
                           <th class="text-right">Cant.</th>
                           <th class="text-right">Precio Unit.</th>
                           <th class="text-right">Subtotal</th>
@@ -67,6 +92,25 @@
           }
         </tbody>
       </table>
+    </div>
+
+    <!-- Paginación -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">
+        Página {{ currentPage() }} de {{ totalPages() }} ({{ filteredItems().length }} resultados)
+      </span>
+      <div style="display: flex; gap: 0.5rem;">
+        <button (click)="currentPage.set(currentPage() - 1)" [disabled]="currentPage() === 1"
+                style="padding: 0.25rem 0.5rem; border: 1px solid #e2e8f0; background: white; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 1; transition: background 0.2s;"
+                [style.opacity]="currentPage() === 1 ? '0.5' : '1'">
+          <span class="material-symbols-outlined" style="font-size: 18px;">chevron_left</span>
+        </button>
+        <button (click)="currentPage.set(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+                style="padding: 0.25rem 0.5rem; border: 1px solid #e2e8f0; background: white; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 1; transition: background 0.2s;"
+                [style.opacity]="currentPage() === totalPages() ? '0.5' : '1'">
+          <span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span>
+        </button>
+      </div>
     </div>
   }
 </div>

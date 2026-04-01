@@ -27,6 +27,13 @@
   border: 1px solid $border-color;
   background: $surface;
   box-shadow: $shadow-sm;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: $shadow-md;
+  }
 
   &--azul   { border-left: 4px solid $primary; .icono-kpi { color: $primary; background: $primary-light; } }
   &--verde  { border-left: 4px solid #16a34a; .icono-kpi { color: #16a34a; background: #dcfce7; } }

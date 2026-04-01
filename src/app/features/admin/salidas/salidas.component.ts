@@ -1,6 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { DatePipe, SlicePipe } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { SalidaService } from '../../../core/services/salida.service';
 import { BicicletaService } from '../../../core/services/bicicleta.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,7 +10,7 @@ import { BicicletaDtoResponse } from '../../../core/models/bicicleta.dto';
 @Component({
   selector: 'app-salidas',
   standalone: true,
-  imports: [DatePipe, SlicePipe, ReactiveFormsModule],
+  imports: [DatePipe, SlicePipe, ReactiveFormsModule, FormsModule],
   templateUrl: './salidas.component.html',
   styleUrl: './salidas.component.scss'
 })
@@ -27,6 +27,49 @@ export class SalidasComponent implements OnInit {
   protected readonly showForm = signal(false);
   protected readonly saving   = signal(false);
 
+  // ── Filtros de tabla ──
+  protected filterTipo = '';
+  protected filterFechaInicio = '';
+  protected filterFechaFin = '';
+
+  // ── Panel desplegable ──
+  protected readonly expandedDate = signal<string | null>(null);
+
+  // ── Items filtrados y ordenados por fecha desc ──
+  protected readonly filteredItems = computed(() => {
+    let data = [...this.items()];
+
+    // Filtro por tipo (VENTA, BAJA)
+    if (this.filterTipo) {
+      data = data.filter(s => s.tipoSalida === this.filterTipo);
+    }
+
+    // Filtro por rango de fechas
+    if (this.filterFechaInicio) {
+      data = data.filter(s => s.fecha.substring(0, 10) >= this.filterFechaInicio);
+    }
+    if (this.filterFechaFin) {
+      data = data.filter(s => s.fecha.substring(0, 10) <= this.filterFechaFin);
+    }
+
+    // Ordenar por fecha descendente
+    data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+    return data;
+  });
+
+  // ── Agrupar por fecha (día) ──
+  protected readonly groupedByDate = computed(() => {
+    const groups = new Map<string, SalidaDtoResponse[]>();
+    for (const exit of this.filteredItems()) {
+      const dateKey = exit.fecha.substring(0, 10); // 'yyyy-MM-dd'
+      if (!groups.has(dateKey)) groups.set(dateKey, []);
+      groups.get(dateKey)!.push(exit);
+    }
+    return groups;
+  });
+
+  protected readonly groupKeys = computed(() => Array.from(this.groupedByDate().keys()));
+
   protected readonly form = this.fb.group({
     idBicicleta: ['', Validators.required],
     cantidad:    [1, [Validators.required, Validators.min(1)]],
@@ -41,9 +84,28 @@ export class SalidasComponent implements OnInit {
   private load(): void {
     this.loading.set(true);
     this.svc.listarTodas().subscribe({
-      next: data => { this.items.set(data); this.loading.set(false); },
+      next: data => { 
+        console.log('🚨 DEBUG PAYLOAD SALIDAS:', data[0]);
+        this.items.set(data); 
+        this.loading.set(false); 
+      },
       error: ()   => this.loading.set(false)
     });
+  }
+
+  toggleFecha(fecha: string): void {
+    this.expandedDate.update(current => current === fecha ? null : fecha);
+  }
+
+  aplicarFiltros(): void {
+    this.items.update(list => [...list]);
+  }
+
+  limpiarFiltros(): void {
+    this.filterTipo = '';
+    this.filterFechaInicio = '';
+    this.filterFechaFin = '';
+    this.items.update(list => [...list]);
   }
 
   abrirForm() {
@@ -71,14 +133,11 @@ export class SalidasComponent implements OnInit {
       observacion: formVals.observacion || undefined
     };
 
-    // Assuming SalidaService has a "crear" method, if not, we use another endpoint 
-    // The user provided the JSON for Dar de Baja, the endpoint should receive SalidaBajaDtoRequest
     this.svc.registrarBaja(payload).subscribe({
       next: () => {
         this.saving.set(false);
         this.showForm.set(false);
         this.load();
-        // recargar las bicis para actualizar stock disponible
         this.biciSvc.listarTodo().subscribe(bs => this.bicicletas.set(bs.filter(b => b.activo && b.stock > 0)));
       },
       error: () => {

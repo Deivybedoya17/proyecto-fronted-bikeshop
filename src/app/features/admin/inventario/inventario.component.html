@@ -2,14 +2,22 @@
   <!-- Encabezado -->
   <div class="encabezado-seccion">
     <h2 class="titulo-pagina">Inventario de Bicicletas</h2>
-    <div class="lado-derecho-encabezado">
+    <div class="lado-derecho-encabezado" style="display: flex; gap: 1rem; align-items: center;">
+      <!-- Buscador -->
+      <div style="position: relative;">
+        <span class="material-symbols-outlined" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 20px;">search</span>
+        <input type="text" [value]="searchTerm()" (input)="searchTerm.set($any($event).target.value)" 
+               placeholder="Buscar código, marca..." 
+               style="padding: 0.5rem 1rem 0.5rem 2.2rem; border-radius: 8px; border: 1px solid #e2e8f0; outline: none; transition: border-color 0.2s;"
+               onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'">
+      </div>
       <div class="estadisticas-encabezado">
         <span class="chip-estadistica chip-estadistica--verde">{{ activos }} Activas</span>
         <span class="chip-estadistica chip-estadistica--rojo">{{ inactivos }} Inactivas</span>
       </div>
       <button class="btn-agregar" (click)="abrirFormNuevo()">
         <span class="material-symbols-outlined">add</span>
-        Nueva Bicicleta
+        Nueva
       </button>
     </div>
   </div>
@@ -97,7 +105,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (b of items(); track b.id) {
+          @for (b of paginatedItems(); track b.id) {
             <tr [class.fila-inactiva]="!b.activo">
               <td><code>{{ b.codigo }}</code></td>
               <td>
@@ -122,6 +130,12 @@
                 </span>
               </td>
               <td class="celda-acciones">
+                <button class="btn-accion" style="color: #64748b;" (click)="cambiarEstado(b)"
+                        [title]="b.activo ? 'Desactivar' : 'Activar'">
+                  <span class="material-symbols-outlined">
+                    {{ b.activo ? 'toggle_on' : 'toggle_off' }}
+                  </span>
+                </button>
                 <button class="btn-accion btn-accion--editar" (click)="editarBicicleta(b)" title="Editar">
                   <span class="material-symbols-outlined">edit</span>
                 </button>
@@ -134,5 +148,31 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Paginación -->
+    @if (filteredItems().length > 0) {
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">
+          Página {{ currentPage() }} de {{ totalPages() }} ({{ filteredItems().length }} resultados)
+        </span>
+        <div style="display: flex; gap: 0.5rem;">
+          <button (click)="currentPage.set(currentPage() - 1)" [disabled]="currentPage() === 1"
+                  style="padding: 0.25rem 0.5rem; border: 1px solid #e2e8f0; background: white; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 1; transition: background 0.2s;"
+                  [style.opacity]="currentPage() === 1 ? '0.5' : '1'">
+            <span class="material-symbols-outlined" style="font-size: 18px;">chevron_left</span>
+          </button>
+          <button (click)="currentPage.set(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+                  style="padding: 0.25rem 0.5rem; border: 1px solid #e2e8f0; background: white; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 1; transition: background 0.2s;"
+                  [style.opacity]="currentPage() === totalPages() ? '0.5' : '1'">
+            <span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div style="text-align: center; padding: 2rem; color: #94a3b8;">
+        <span class="material-symbols-outlined" style="font-size: 40px;">search_off</span>
+        <p>No se encontraron resultados para "{{ searchTerm() }}"</p>
+      </div>
+    }
   }
 </div>

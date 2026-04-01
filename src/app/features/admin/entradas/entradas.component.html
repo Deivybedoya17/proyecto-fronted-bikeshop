@@ -9,6 +9,30 @@
     </div>
   </div>
 
+  <!-- ── FILTROS DE TABLA ───────────── -->
+  <div class="barra-filtros">
+    <div class="filtro-grupo">
+      <label class="filtro-label">Proveedor</label>
+      <select class="filtro-select" [(ngModel)]="filterProveedor" (ngModelChange)="aplicarFiltros()">
+        <option value="">Todos</option>
+        @for (p of proveedoresUnicos(); track p) {
+          <option [value]="p">{{ p }}</option>
+        }
+      </select>
+    </div>
+    <div class="filtro-grupo">
+      <label class="filtro-label">Desde</label>
+      <input type="date" class="filtro-input" [(ngModel)]="filterFechaInicio" (ngModelChange)="aplicarFiltros()" />
+    </div>
+    <div class="filtro-grupo">
+      <label class="filtro-label">Hasta</label>
+      <input type="date" class="filtro-input" [(ngModel)]="filterFechaFin" (ngModelChange)="aplicarFiltros()" />
+    </div>
+    <button class="filtro-limpiar" (click)="limpiarFiltros()" title="Limpiar filtros">
+      <span class="material-symbols-outlined">filter_alt_off</span>
+    </button>
+  </div>
+
   <!-- ── FORMULARIO INGRESAR STOCK ───────────── -->
   @if (showForm()) {
     <div class="tarjeta-formulario">
@@ -77,33 +101,50 @@
     </div>
   }
 
-  <!-- ── TABLA HISTORIAL ─────────────────────── -->
+  <!-- ── PANELES AGRUPADOS POR FECHA ─────────── -->
   @if (loading()) {
     <p class="mensaje-carga"><span class="material-symbols-outlined girar">sync</span> Cargando entradas...</p>
-  } @else if (items().length === 0) {
+  } @else if (filteredItems().length === 0) {
     <div class="estado-vacio">
       <span class="material-symbols-outlined">inbox</span>
-      <p>No hay entradas registradas.</p>
+      <p>No hay entradas que coincidan con los filtros.</p>
     </div>
   } @else {
-    <div class="contenedor-tabla">
-      <table class="tabla-datos">
-        <thead>
-          <tr><th>Fecha</th><th>Bicicleta</th><th>Marca</th><th>Cantidad</th><th>Proveedor</th><th>Usuario</th></tr>
-        </thead>
-        <tbody>
-          @for (e of items(); track e.idEntrada) {
-            <tr>
-              <td>{{ e.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
-              <td><code>{{ e.codigoBicicleta }}</code></td>
-              <td>{{ e.marcaBicicleta }}</td>
-              <td><span class="chip-cantidad">+{{ e.cantidad }}</span></td>
-              <td>{{ e.nombreProveedor }}</td>
-              <td>{{ e.nombreUsuario }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    <p class="resultado-filtro">{{ filteredItems().length }} entrada(s) encontrada(s)</p>
+
+    @for (dateKey of groupKeys(); track dateKey) {
+      <div class="panel-fecha">
+        <button class="panel-fecha__header" (click)="toggleFecha(dateKey)" [class.panel-fecha__header--abierto]="expandedDate() === dateKey">
+          <div class="panel-fecha__info">
+            <span class="material-symbols-outlined">calendar_today</span>
+            <span class="panel-fecha__titulo">{{ dateKey | date:'EEEE dd/MM/yyyy' }}</span>
+            <span class="panel-fecha__badge">{{ groupedByDate().get(dateKey)!.length }} entrada(s)</span>
+          </div>
+          <span class="material-symbols-outlined panel-fecha__flecha" [class.rotado]="expandedDate() === dateKey">expand_more</span>
+        </button>
+
+        @if (expandedDate() === dateKey) {
+          <div class="panel-fecha__body">
+            <table class="tabla-datos">
+              <thead>
+                <tr><th>Hora</th><th>Bicicleta</th><th>Marca</th><th>Cantidad</th><th>Proveedor</th><th>Usuario</th></tr>
+              </thead>
+              <tbody>
+                @for (e of groupedByDate().get(dateKey)!; track e.idEntrada) {
+                  <tr>
+                    <td>{{ e.fecha | date:'HH:mm' }}</td>
+                    <td><code>{{ e.codigoBicicleta }}</code></td>
+                    <td>{{ e.marcaBicicleta }}</td>
+                    <td><span class="chip-cantidad">+{{ e.cantidad }}</span></td>
+                    <td>{{ e.nombreProveedor }}</td>
+                    <td>{{ e.nombreUsuario }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
   }
 </div>

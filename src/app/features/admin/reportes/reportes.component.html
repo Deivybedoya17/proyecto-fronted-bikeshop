@@ -1,0 +1,384 @@
+<div class="reportes">
+
+  <!-- ── Encabezado ──────────────────────────────────────────────────────── -->
+  <div class="reportes__cabecera">
+    <div>
+      <h2 class="reportes__titulo">
+        <span class="material-symbols-outlined">bar_chart</span>
+        Reportes
+      </h2>
+      <p class="reportes__subtitulo">Análisis y estadísticas de la tienda</p>
+    </div>
+
+    <!-- Filtro de fechas -->
+    <div class="reportes__filtro">
+      <div class="campo-fecha">
+        <label for="fechaInicio">Desde</label>
+        <input id="fechaInicio" type="date" [(ngModel)]="fechaInicio" class="input-fecha" />
+      </div>
+      <div class="campo-fecha">
+        <label for="fechaFin">Hasta</label>
+        <input id="fechaFin" type="date" [(ngModel)]="fechaFin" class="input-fecha" />
+      </div>
+      <button class="btn-aplicar" (click)="aplicarFiltro()" id="btn-aplicar-filtro">
+        <span class="material-symbols-outlined">filter_alt</span>
+        Aplicar
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Pestañas ────────────────────────────────────────────────────────── -->
+  <div class="reportes__tabs" role="tablist">
+    <button id="tab-resumen"     role="tab" class="tab" [class.tab--activo]="pestanaActiva() === 'resumen'"     (click)="seleccionarPestana('resumen')">
+      <span class="material-symbols-outlined">dashboard</span> Resumen
+    </button>
+    <button id="tab-ventas"      role="tab" class="tab" [class.tab--activo]="pestanaActiva() === 'ventas'"      (click)="seleccionarPestana('ventas')">
+      <span class="material-symbols-outlined">point_of_sale</span> Ventas
+    </button>
+    <button id="tab-inventario"  role="tab" class="tab" [class.tab--activo]="pestanaActiva() === 'inventario'"  (click)="seleccionarPestana('inventario')">
+      <span class="material-symbols-outlined">inventory_2</span> Inventario
+    </button>
+    <button id="tab-top"         role="tab" class="tab" [class.tab--activo]="pestanaActiva() === 'top'"         (click)="seleccionarPestana('top')">
+      <span class="material-symbols-outlined">workspace_premium</span> Top Bicicletas
+    </button>
+    <button id="tab-movimientos" role="tab" class="tab" [class.tab--activo]="pestanaActiva() === 'movimientos'" (click)="seleccionarPestana('movimientos')">
+      <span class="material-symbols-outlined">swap_vert</span> Movimientos
+    </button>
+  </div>
+
+  <!-- ── Cargando ─────────────────────────────────────────────────────────── -->
+  @if (cargando()) {
+    <div class="estado-carga">
+      <span class="material-symbols-outlined girar">sync</span>
+      <p>Cargando reporte...</p>
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PESTAÑA: RESUMEN                                                       -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  @if (!cargando() && pestanaActiva() === 'resumen' && resumen()) {
+    <div class="panel-reporte" role="tabpanel">
+
+      <!-- KPIs -->
+      <div class="cuadricula-kpi">
+        <div class="kpi kpi--azul">
+          <span class="material-symbols-outlined kpi__icono">point_of_sale</span>
+          <div>
+            <p class="kpi__etiqueta">Total Ventas</p>
+            <p class="kpi__valor">{{ resumen()!.totalVentas }}</p>
+          </div>
+        </div>
+        <div class="kpi kpi--verde">
+          <span class="material-symbols-outlined kpi__icono">payments</span>
+          <div>
+            <p class="kpi__etiqueta">Ingresos Totales</p>
+            <p class="kpi__valor">{{ resumen()!.totalIngresos | currency:'USD':'symbol':'1.0-0' }}</p>
+          </div>
+        </div>
+        <div class="kpi kpi--morado">
+          <span class="material-symbols-outlined kpi__icono">pedal_bike</span>
+          <div>
+            <p class="kpi__etiqueta">Unidades Vendidas</p>
+            <p class="kpi__valor">{{ resumen()!.totalUnidadesVendidas }}</p>
+          </div>
+        </div>
+        <div class="kpi kpi--naranja">
+          <span class="material-symbols-outlined kpi__icono">inventory_2</span>
+          <div>
+            <p class="kpi__etiqueta">Bicicletas Activas</p>
+            <p class="kpi__valor">{{ resumen()!.bicicletasActivas }}</p>
+          </div>
+        </div>
+        <div class="kpi" [class.kpi--rojo]="resumen()!.stockCritico > 0" [class.kpi--gris]="resumen()!.stockCritico === 0">
+          <span class="material-symbols-outlined kpi__icono">warning</span>
+          <div>
+            <p class="kpi__etiqueta">Stock Crítico</p>
+            <p class="kpi__valor">{{ resumen()!.stockCritico }}</p>
+          </div>
+        </div>
+        <div class="kpi kpi--cyan">
+          <span class="material-symbols-outlined kpi__icono">input</span>
+          <div>
+            <p class="kpi__etiqueta">Entradas / Salidas</p>
+            <p class="kpi__valor">{{ resumen()!.totalEntradas }} / {{ resumen()!.totalSalidas }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ingresos por tipo de bicicleta -->
+      <div class="seccion-grafico">
+        <h3 class="seccion-grafico__titulo">Ingresos por tipo de bicicleta</h3>
+        <div class="barras-horizontales">
+          @for (tipo of resumen()!.ingresosPorTipo; track tipo.tipo) {
+            <div class="barra-fila">
+              <span class="barra-fila__etiqueta">{{ tipo.tipo }}</span>
+              <div class="barra-fila__barra-contenedor">
+                <div class="barra-fila__barra"
+                     [style.width.%]="(tipo.ingresos / maxIngresosTipo()) * 100">
+                </div>
+              </div>
+              <span class="barra-fila__valor">{{ tipo.ingresos | currency:'USD':'symbol':'1.0-0' }}</span>
+              <span class="barra-fila__unidades">{{ tipo.unidades }} uds.</span>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PESTAÑA: VENTAS POR PERIODO                                             -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  @if (!cargando() && pestanaActiva() === 'ventas' && ventas()) {
+    <div class="panel-reporte" role="tabpanel">
+
+      <!-- KPIs rápidos -->
+      <div class="cuadricula-kpi cuadricula-kpi--3cols">
+        <div class="kpi kpi--azul">
+          <span class="material-symbols-outlined kpi__icono">receipt_long</span>
+          <div>
+            <p class="kpi__etiqueta">Total Ventas</p>
+            <p class="kpi__valor">{{ ventas()!.totalVentas }}</p>
+          </div>
+        </div>
+        <div class="kpi kpi--verde">
+          <span class="material-symbols-outlined kpi__icono">payments</span>
+          <div>
+            <p class="kpi__etiqueta">Ingresos Totales</p>
+            <p class="kpi__valor">{{ ventas()!.totalIngresos | currency:'USD':'symbol':'1.0-0' }}</p>
+          </div>
+        </div>
+        <div class="kpi kpi--morado">
+          <span class="material-symbols-outlined kpi__icono">trending_up</span>
+          <div>
+            <p class="kpi__etiqueta">Promedio Diario</p>
+            <p class="kpi__valor">{{ ventas()!.promedioVentaDiaria | number:'1.1-1' }} ventas/día</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de barras diario -->
+      <div class="seccion-grafico">
+        <h3 class="seccion-grafico__titulo">Ingresos por día</h3>
+        <div class="grafico-barras-verticales">
+          @for (dia of ventas()!.ventasPorDia; track dia.fecha) {
+            <div class="barra-vertical"
+                 [title]="dia.fecha + ': ' + (dia.ingresos | currency:'USD')">
+              <div class="barra-vertical__relleno"
+                   [style.height.%]="(dia.ingresos / maxIngresos()) * 100">
+              </div>
+              <span class="barra-vertical__dia">{{ dia.fecha | date:'d' }}</span>
+            </div>
+          }
+        </div>
+        <p class="grafico-leyenda">Día del mes — alto de barra proporcional al ingreso diario</p>
+      </div>
+
+      <!-- Tabla detallada -->
+      <div class="seccion-grafico">
+        <h3 class="seccion-grafico__titulo">Detalle por día</h3>
+        <div class="contenedor-tabla">
+          <table class="tabla-datos">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th class="text-right">Ventas</th>
+                <th class="text-right">Ingresos</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (dia of ventas()!.ventasPorDia; track dia.fecha) {
+                @if (dia.totalVentas > 0) {
+                  <tr>
+                    <td>{{ dia.fecha | date:'EEEE dd/MM/yyyy' }}</td>
+                    <td class="text-right">{{ dia.totalVentas }}</td>
+                    <td class="text-right"><strong>{{ dia.ingresos | currency:'USD' }}</strong></td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PESTAÑA: INVENTARIO                                                    -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  @if (!cargando() && pestanaActiva() === 'inventario' && inventario()) {
+    <div class="panel-reporte" role="tabpanel">
+
+      <div class="cuadricula-kpi cuadricula-kpi--3cols">
+        <div class="kpi kpi--azul">
+          <span class="material-symbols-outlined kpi__icono">pedal_bike</span>
+          <div>
+            <p class="kpi__etiqueta">Tipos de Bicicleta</p>
+            <p class="kpi__valor">{{ inventario()!.totalBicicletas }}</p>
+          </div>
+        </div>
+        <div class="kpi kpi--verde">
+          <span class="material-symbols-outlined kpi__icono">inventory_2</span>
+          <div>
+            <p class="kpi__etiqueta">Stock Total</p>
+            <p class="kpi__valor">{{ inventario()!.stockTotal }} uds.</p>
+          </div>
+        </div>
+        <div class="kpi kpi--morado">
+          <span class="material-symbols-outlined kpi__icono">account_balance_wallet</span>
+          <div>
+            <p class="kpi__etiqueta">Valor Inventario</p>
+            <p class="kpi__valor">{{ inventario()!.valorTotalInventario | currency:'USD':'symbol':'1.0-0' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stock crítico -->
+      <div class="seccion-grafico">
+        <h3 class="seccion-grafico__titulo alerta-titulo">
+          <span class="material-symbols-outlined">warning</span>
+          Stock Crítico ({{ inventario()!.totalStockCritico }} productos)
+        </h3>
+        @if (inventario()!.bicicletasEnStockCritico.length === 0) {
+          <p class="mensaje-ok">
+            <span class="material-symbols-outlined">check_circle</span>
+            Todos los productos tienen stock suficiente.
+          </p>
+        } @else {
+          <div class="contenedor-tabla">
+            <table class="tabla-datos">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Marca</th>
+                  <th>Modelo</th>
+                  <th>Tipo</th>
+                  <th class="text-center">Stock Actual</th>
+                  <th class="text-center">Umbral Mínimo</th>
+                  <th class="text-center">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (b of inventario()!.bicicletasEnStockCritico; track b.idBicicleta) {
+                  <tr>
+                    <td><code>{{ b.codigo }}</code></td>
+                    <td>{{ b.marca }}</td>
+                    <td>{{ b.modelo }}</td>
+                    <td><span class="insignia">{{ b.tipo }}</span></td>
+                    <td class="text-center texto-rojo font-bold">{{ b.stockActual }}</td>
+                    <td class="text-center">{{ b.umbralMinimo }}</td>
+                    <td class="text-center">
+                      <span class="insignia insignia--roja">⚠ Bajo stock</span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PESTAÑA: TOP BICICLETAS                                                -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  @if (!cargando() && pestanaActiva() === 'top' && topBici()) {
+    <div class="panel-reporte" role="tabpanel">
+
+      <div class="seccion-grafico">
+        <h3 class="seccion-grafico__titulo">🏆 Bicicletas más vendidas del periodo</h3>
+        <div class="ranking-lista">
+          @for (b of topBici()!.top; track b.idBicicleta; let i = $index) {
+            <div class="ranking-item">
+              <span class="ranking-item__posicion" [class.oro]="i===0" [class.plata]="i===1" [class.bronce]="i===2">
+                {{ i + 1 }}
+              </span>
+              <div class="ranking-item__info">
+                <p class="ranking-item__nombre"><strong>{{ b.marca }}</strong> {{ b.modelo }}</p>
+                <p class="ranking-item__tipo">{{ b.tipo }} · <code>{{ b.codigo }}</code></p>
+                <div class="ranking-item__barra-contenedor">
+                  <div class="ranking-item__barra"
+                       [style.width.%]="(b.unidadesVendidas / maxUnidades()) * 100">
+                  </div>
+                </div>
+              </div>
+              <div class="ranking-item__stats">
+                <p class="ranking-item__unidades">{{ b.unidadesVendidas }} uds.</p>
+                <p class="ranking-item__ingresos">{{ b.ingresosGenerados | currency:'USD':'symbol':'1.0-0' }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PESTAÑA: MOVIMIENTOS                                                   -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  @if (!cargando() && pestanaActiva() === 'movimientos' && movimientos()) {
+    <div class="panel-reporte" role="tabpanel">
+
+      <div class="cuadricula-kpi cuadricula-kpi--2cols">
+        <div class="kpi kpi--verde">
+          <span class="material-symbols-outlined kpi__icono">input</span>
+          <div>
+            <p class="kpi__etiqueta">Total Entradas</p>
+            <p class="kpi__valor">{{ movimientos()!.totalEntradas }}</p>
+          </div>
+        </div>
+        <div class="kpi kpi--rojo">
+          <span class="material-symbols-outlined kpi__icono">output</span>
+          <div>
+            <p class="kpi__etiqueta">Total Salidas / Bajas</p>
+            <p class="kpi__valor">{{ movimientos()!.totalSalidas }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="seccion-grafico">
+        <h3 class="seccion-grafico__titulo">Historial de movimientos</h3>
+        <div class="contenedor-tabla">
+          <table class="tabla-datos">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Código</th>
+                <th>Marca</th>
+                <th class="text-center">Cantidad</th>
+                <th>Responsable</th>
+                <th>Observación</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (m of movimientos()!.movimientos; track m.fecha + m.codigoBicicleta + m.tipo) {
+                <tr>
+                  <td>{{ m.fecha | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <span class="insignia" [class.insignia--verde]="m.tipo === 'ENTRADA'" [class.insignia--roja]="m.tipo === 'SALIDA'">
+                      {{ m.tipo === 'ENTRADA' ? '↑ Entrada' : '↓ Salida' }}
+                    </span>
+                  </td>
+                  <td><code>{{ m.codigoBicicleta }}</code></td>
+                  <td>{{ m.marcaBicicleta }}</td>
+                  <td class="text-center">{{ m.cantidad }}</td>
+                  <td>{{ m.responsable }}</td>
+                  <td class="texto-secundario">{{ m.observacion || '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

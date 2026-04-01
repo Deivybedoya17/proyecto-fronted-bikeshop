@@ -28,6 +28,5 @@ export interface BicicletaUpdateDto {
   modelo?: string;
   tipo?: Tipo;
   valorUnitario?: number;
-  stock?: number;
   activo?: boolean;
 }

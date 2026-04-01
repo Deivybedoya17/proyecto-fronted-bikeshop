@@ -40,5 +40,34 @@
     .font-bold { font-weight: 700; color: $primary; }
   }
 }
+/* ------------------------------------------------
+   COMPONENTES NUEVOS: FILTROS
+------------------------------------------------ */
+.barra-filtros {
+  display: flex; gap: $spacing-md; background: white; padding: $spacing-md;
+  border-radius: $radius-xl; border: 1px solid $border-color; margin-bottom: $spacing-xl;
+  box-shadow: $shadow-sm; align-items: flex-end; flex-wrap: wrap;
+}
+.filtro-grupo {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.filtro-label {
+  font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: $text-secondary;
+}
+.filtro-select, .filtro-input {
+  padding: 8px $spacing-sm; border: 1px solid $border-color; border-radius: $radius-md;
+  font-size: $font-size-sm; color: $text-primary; outline: none; background: white;
+  &:focus { border-color: $primary; }
+}
+.filtro-limpiar {
+  @include flex-center; width: 36px; height: 36px; border-radius: $radius-md; outline: none;
+  background: #f1f5f9; border: 1px solid transparent; color: $text-secondary; cursor: pointer;
+  transition: all 0.2s;
+  &:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
+}
+.resultado-filtro {
+  font-size: $font-size-sm; color: $text-secondary; margin-bottom: $spacing-md; font-weight: 500;
+}
+
 @keyframes girar { to { transform: rotate(360deg); } }
 .girar { animation: girar 1s linear infinite; }

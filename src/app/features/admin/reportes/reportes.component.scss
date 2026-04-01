@@ -1,0 +1,421 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+// =============================================
+// Reportes – Página principal
+// =============================================
+
+.reportes {
+  max-width: 1200px;
+
+  // ── Cabecera ────────────────────────────────────────────────────────────
+  &__cabecera {
+    @include flex-between;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__titulo {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-2xl;
+    font-weight: 800;
+    color: $text-primary;
+    .material-symbols-outlined { color: $primary; font-size: 1.75rem; }
+  }
+
+  &__subtitulo {
+    margin-top: $spacing-xs;
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  // ── Filtro de fechas ────────────────────────────────────────────────────
+  &__filtro {
+    display: flex;
+    align-items: flex-end;
+    gap: $spacing-sm;
+    flex-wrap: wrap;
+  }
+
+  // ── Pestañas ────────────────────────────────────────────────────────────
+  &__tabs {
+    display: flex;
+    gap: $spacing-xs;
+    border-bottom: 2px solid $border-color;
+    margin-bottom: $spacing-xl;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+}
+
+// ── Campo de fecha ───────────────────────────────────────────────────────────
+.campo-fecha {
+  @include flex-col;
+  gap: 4px;
+
+  label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $text-secondary;
+  }
+}
+
+.input-fecha {
+  padding: 0.45rem $spacing-sm;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  color: $text-primary;
+  background: $surface;
+  transition: border-color 0.2s;
+
+  &:focus { outline: none; border-color: $primary; box-shadow: 0 0 0 3px rgba($primary, 0.12); }
+}
+
+.btn-aplicar {
+  @include flex-center;
+  gap: $spacing-xs;
+  padding: 0.5rem $spacing-md;
+  background: $primary;
+  color: #fff;
+  border: none;
+  border-radius: $radius-md;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+
+  .material-symbols-outlined { font-size: 1.1rem; }
+
+  &:hover { background: $primary-dark; transform: translateY(-1px); }
+  &:active { transform: translateY(0); }
+}
+
+// ── Tab button ───────────────────────────────────────────────────────────────
+.tab {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-sm $spacing-md;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: $text-secondary;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+
+  .material-symbols-outlined { font-size: 1.1rem; }
+
+  &:hover { color: $text-primary; }
+
+  &--activo {
+    color: $primary;
+    border-bottom-color: $primary;
+    font-weight: 700;
+  }
+}
+
+// ── Estado carga ─────────────────────────────────────────────────────────────
+.estado-carga {
+  @include flex-col;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-3xl 0;
+  color: $text-secondary;
+
+  .material-symbols-outlined { font-size: 2.5rem; color: $primary; }
+  p { font-size: $font-size-sm; }
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+.girar { animation: girar 1s linear infinite; }
+
+// ── Panel de reporte ─────────────────────────────────────────────────────────
+.panel-reporte { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+// ── Grid KPI ─────────────────────────────────────────────────────────────────
+.cuadricula-kpi {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+
+  &--3cols { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  &--2cols { grid-template-columns: repeat(2, 1fr); max-width: 500px; }
+}
+
+.kpi {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $radius-xl;
+  background: $surface;
+  border: 1px solid $border-color;
+  box-shadow: $shadow-sm;
+  transition: box-shadow 0.2s, transform 0.2s;
+
+  &:hover { box-shadow: $shadow-md; transform: translateY(-2px); }
+
+  &__icono { font-size: 2rem; }
+  &__etiqueta { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: $text-secondary; }
+  &__valor { font-size: $font-size-xl; font-weight: 800; color: $text-primary; margin-top: 2px; }
+
+  &--azul   { border-left: 4px solid $primary;      .kpi__icono { color: $primary; } }
+  &--verde  { border-left: 4px solid #16a34a;       .kpi__icono { color: #16a34a; } }
+  &--morado { border-left: 4px solid #7c3aed;       .kpi__icono { color: #7c3aed; } }
+  &--naranja{ border-left: 4px solid #ea580c;       .kpi__icono { color: #ea580c; } }
+  &--cyan   { border-left: 4px solid #0891b2;       .kpi__icono { color: #0891b2; } }
+  &--rojo   { border-left: 4px solid $accent-red;   .kpi__icono { color: $accent-red; } }
+  &--gris   { border-left: 4px solid $text-light;   .kpi__icono { color: $text-light; } }
+}
+
+// ── Sección de gráfico ───────────────────────────────────────────────────────
+.seccion-grafico {
+  background: $surface;
+  border: 1px solid $border-color;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  box-shadow: $shadow-sm;
+
+  &__titulo {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.alerta-titulo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $accent-red;
+  .material-symbols-outlined { font-size: 1.3rem; }
+}
+
+// ── Barras horizontales ──────────────────────────────────────────────────────
+.barras-horizontales { @include flex-col; gap: $spacing-sm; }
+
+.barra-fila {
+  display: grid;
+  grid-template-columns: 110px 1fr 120px 70px;
+  align-items: center;
+  gap: $spacing-sm;
+
+  &__etiqueta {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-secondary;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+
+  &__barra-contenedor {
+    height: 1.5rem;
+    background: $bg-light;
+    border-radius: $radius-full;
+    overflow: hidden;
+  }
+
+  &__barra {
+    height: 100%;
+    background: linear-gradient(90deg, $primary, #3b82f6);
+    border-radius: $radius-full;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+    min-width: 4px;
+  }
+
+  &__valor { font-size: $font-size-sm; font-weight: 700; color: $text-primary; text-align: right; }
+  &__unidades { font-size: 0.72rem; color: $text-secondary; text-align: right; }
+}
+
+// ── Gráfico barras verticales ────────────────────────────────────────────────
+.grafico-barras-verticales {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 160px;
+  padding: $spacing-xs 0;
+  overflow-x: auto;
+}
+
+.barra-vertical {
+  @include flex-col;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex: 1;
+  min-width: 18px;
+  cursor: pointer;
+
+  &__relleno {
+    width: 100%;
+    background: linear-gradient(180deg, #3b82f6, $primary);
+    border-radius: 4px 4px 0 0;
+    min-height: 3px;
+    transition: height 0.5s ease, opacity 0.2s;
+
+    &:hover { opacity: 0.8; }
+  }
+
+  &__dia {
+    font-size: 0.6rem;
+    color: $text-secondary;
+  }
+}
+
+.grafico-leyenda {
+  font-size: 0.72rem;
+  color: $text-light;
+  margin-top: $spacing-sm;
+  text-align: center;
+}
+
+// ── Tabla de datos ───────────────────────────────────────────────────────────
+.contenedor-tabla {
+  overflow-x: auto;
+  border-radius: $radius-lg;
+  border: 1px solid $border-color;
+}
+
+.tabla-datos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+  background: $surface;
+
+  th {
+    background: $bg-light;
+    padding: $spacing-sm $spacing-md;
+    text-align: left;
+    font-weight: 700;
+    color: $text-secondary;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: $spacing-sm $spacing-md;
+    border-top: 1px solid $border-color;
+    vertical-align: middle;
+  }
+
+  tr:hover td { background: #f8fafc; }
+
+  code {
+    background: $bg-light;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.8rem;
+    font-family: monospace;
+  }
+}
+
+// ── Ranking ──────────────────────────────────────────────────────────────────
+.ranking-lista { @include flex-col; gap: $spacing-md; }
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $bg-light;
+  border-radius: $radius-lg;
+  border: 1px solid $border-color;
+  transition: box-shadow 0.2s, transform 0.2s;
+
+  &:hover { box-shadow: $shadow-md; transform: translateX(4px); }
+
+  &__posicion {
+    @include flex-center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: $radius-full;
+    font-weight: 800;
+    font-size: $font-size-lg;
+    background: $border-color;
+    color: $text-secondary;
+    flex-shrink: 0;
+
+    &.oro    { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; }
+    &.plata  { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+    &.bronce { background: linear-gradient(135deg, #c07941, #92400e); color: #fff; }
+  }
+
+  &__info { flex: 1; min-width: 0; }
+  &__nombre { font-weight: 700; font-size: $font-size-sm; color: $text-primary; }
+  &__tipo { font-size: 0.72rem; color: $text-secondary; margin-top: 2px; }
+
+  &__barra-contenedor {
+    height: 8px;
+    background: $border-color;
+    border-radius: $radius-full;
+    margin-top: $spacing-xs;
+    overflow: hidden;
+  }
+
+  &__barra {
+    height: 100%;
+    background: linear-gradient(90deg, $primary, #3b82f6);
+    border-radius: $radius-full;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+    min-width: 4px;
+  }
+
+  &__stats { text-align: right; flex-shrink: 0; }
+  &__unidades { font-weight: 700; font-size: $font-size-lg; color: $primary; }
+  &__ingresos { font-size: 0.72rem; color: $text-secondary; }
+}
+
+// ── Insignias / Badges ───────────────────────────────────────────────────────
+.insignia {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: $primary-light;
+  color: $primary-dark;
+  white-space: nowrap;
+
+  &--verde { background: #dcfce7; color: #15803d; }
+  &--roja  { background: #fee2e2; color: $accent-red-dark; }
+}
+
+// ── Utilidades ───────────────────────────────────────────────────────────────
+.text-right   { text-align: right; }
+.text-center  { text-align: center; }
+.texto-rojo   { color: $accent-red; }
+.texto-secundario { color: $text-secondary; font-style: italic; }
+.font-bold    { font-weight: 700; }
+
+.mensaje-ok {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  color: #15803d;
+  font-weight: 600;
+  font-size: $font-size-sm;
+  padding: $spacing-md;
+
+  .material-symbols-outlined { color: #16a34a; font-size: 1.4rem; }
+}

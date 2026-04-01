@@ -28,4 +28,12 @@ export class BicicletaService {
   eliminar(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  activar(id: string): Observable<BicicletaDtoResponse> {
+    return this.http.put<BicicletaDtoResponse>(`${this.baseUrl}/${id}/activar`, {});
+  }
+
+  desactivar(id: string): Observable<BicicletaDtoResponse> {
+    return this.http.put<BicicletaDtoResponse>(`${this.baseUrl}/${id}/desactivar`, {});
+  }
 }
