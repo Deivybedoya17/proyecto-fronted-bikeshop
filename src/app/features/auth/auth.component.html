@@ -1,7 +1,13 @@
-<!-- Página de login: diseño dividido (formulario izq, decorativo der) -->
+<!-- Video de fondo estático cubriendo toda la pantalla -->
+<video class="video-fondo" autoplay loop muted playsinline>
+  <!-- Usamos hero-cycling2.mp4 como solicitaste -->
+  <source src="video/hero-cycling2.mp4" type="video/mp4">
+</video>
+<div class="video-overlay"></div>
+
+<!-- Contenedor centralizado para el Login flontante -->
 <div class="pagina-login">
-  <!-- Panel izquierdo -->
-  <div class="panel-login">
+  <div class="panel-login glass-effect">
     <a routerLink="/" class="logotipo-login">
       <span class="material-symbols-outlined">pedal_bike</span>
       <span>BikeShop</span>
@@ -79,15 +85,6 @@
       <p class="crear-cuenta-login">
         ¿No tienes cuenta? <a routerLink="/registro">Crear usuario</a>
       </p>
-    </div>
-  </div>
-
-  <!-- Panel decorativo derecho -->
-  <div class="portada-login">
-    <div class="portada-login__interior">
-      <span class="material-symbols-outlined portada-login__icono">pedal_bike</span>
-      <h3>Panel de Administración</h3>
-      <p>Gestiona tu inventario, ventas y clientes de BikeShop desde un solo lugar.</p>
     </div>
   </div>
 </div>

@@ -85,7 +85,6 @@ export class SalidasComponent implements OnInit {
     this.loading.set(true);
     this.svc.listarTodas().subscribe({
       next: data => { 
-        console.log('🚨 DEBUG PAYLOAD SALIDAS:', data[0]);
         this.items.set(data); 
         this.loading.set(false); 
       },
