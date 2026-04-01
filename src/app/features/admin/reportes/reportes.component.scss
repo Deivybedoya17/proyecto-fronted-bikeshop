@@ -419,3 +419,50 @@
 
   .material-symbols-outlined { color: #16a34a; font-size: 1.4rem; }
 }
+
+// ── Botones de exportación ───────────────────────────────────────────────────
+.exportar-grupo {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+}
+
+.btn-exportar {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: 0.5rem $spacing-md;
+  border: 1px solid;
+  border-radius: $radius-md;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  white-space: nowrap;
+
+  .material-symbols-outlined { font-size: 1.1rem; }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+  &:active { transform: translateY(0); }
+
+  &--pdf {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #dc2626;
+
+    &:hover { background: #fee2e2; }
+  }
+
+  &--excel {
+    background: #f0fdf4;
+    border-color: #86efac;
+    color: #16a34a;
+
+    &:hover { background: #dcfce7; }
+  }
+}
