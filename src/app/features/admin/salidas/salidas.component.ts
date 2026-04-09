@@ -32,8 +32,6 @@ export class SalidasComponent implements OnInit {
   protected filterFechaInicio = '';
   protected filterFechaFin = '';
 
-  // ── Panel desplegable ──
-  protected readonly expandedDate = signal<string | null>(null);
 
   // ── Items filtrados y ordenados por fecha desc ──
   protected readonly filteredItems = computed(() => {
@@ -57,18 +55,17 @@ export class SalidasComponent implements OnInit {
     return data;
   });
 
-  // ── Agrupar por fecha (día) ──
-  protected readonly groupedByDate = computed(() => {
-    const groups = new Map<string, SalidaDtoResponse[]>();
-    for (const exit of this.filteredItems()) {
-      const dateKey = exit.fecha.substring(0, 10); // 'yyyy-MM-dd'
-      if (!groups.has(dateKey)) groups.set(dateKey, []);
-      groups.get(dateKey)!.push(exit);
-    }
-    return groups;
+  protected readonly currentPage = signal(1);
+  protected readonly pageSize = signal(5);
+
+  protected readonly totalPages = computed(() => {
+    return Math.max(1, Math.ceil(this.filteredItems().length / this.pageSize()));
   });
 
-  protected readonly groupKeys = computed(() => Array.from(this.groupedByDate().keys()));
+  protected readonly paginatedItems = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredItems().slice(start, start + this.pageSize());
+  });
 
   protected readonly form = this.fb.group({
     idBicicleta: ['', Validators.required],
@@ -87,17 +84,15 @@ export class SalidasComponent implements OnInit {
       next: data => { 
         this.items.set(data); 
         this.loading.set(false); 
+        this.currentPage.set(1);
       },
       error: ()   => this.loading.set(false)
     });
   }
 
-  toggleFecha(fecha: string): void {
-    this.expandedDate.update(current => current === fecha ? null : fecha);
-  }
-
   aplicarFiltros(): void {
     this.items.update(list => [...list]);
+    this.currentPage.set(1);
   }
 
   limpiarFiltros(): void {
@@ -105,6 +100,7 @@ export class SalidasComponent implements OnInit {
     this.filterFechaInicio = '';
     this.filterFechaFin = '';
     this.items.update(list => [...list]);
+    this.currentPage.set(1);
   }
 
   abrirForm() {

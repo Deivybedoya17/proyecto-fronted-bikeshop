@@ -62,6 +62,10 @@ export class InventarioComponent implements OnInit {
   protected get activos() { return this.items().filter(b => b.activo).length; }
   protected get inactivos() { return this.items().filter(b => !b.activo).length; }
 
+  formatTipo(t: string): string {
+    return t === 'MONTANA' ? 'MONTAÑA' : t;
+  }
+
   ngOnInit(): void { this.load(); }
 
   private load(): void {

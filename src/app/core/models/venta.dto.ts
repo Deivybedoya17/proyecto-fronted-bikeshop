@@ -10,6 +10,7 @@ export interface VentaDtoRequest {
   idUsuario: string;      // UUID
   fecha: string;          // ISO 8601 LocalDateTime
   detalles: DetalleVentaDtoRequest[];
+  emailCliente?: string | null;  // Opcional: si se envía, el backend manda la factura por correo
 }
 
 export interface DetalleVentaDtoResponse {

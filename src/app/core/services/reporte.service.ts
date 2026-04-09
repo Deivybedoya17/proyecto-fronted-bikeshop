@@ -299,6 +299,14 @@ export class ReporteService {
     );
   }
 
+  exportarFacturaPdf(idVenta: string): void {
+    this.descargarArchivo(
+      `${this.baseUrl}/facturas/${idVenta}/export/pdf`,
+      {},
+      `factura-${idVenta.substring(0,8).toUpperCase()}.pdf`
+    );
+  }
+
   exportarVentasExcel(fechaInicio: string, fechaFin: string): void {
     this.descargarArchivo(
       `${this.baseUrl}/ventas/export/excel`,
@@ -342,6 +350,11 @@ export class ReporteService {
 
   private descargarArchivo(url: string, queryParams: Record<string, string>, filename: string): void {
     let params = new HttpParams();
+    
+    // Inyectar URL absoluta del logo para que el backend lo pueda procesar en JasperReports u otro.
+    const baseUrl = window.location.origin;
+    queryParams['logoUrl'] = `${baseUrl}/images/logo.png`;
+
     for (const [key, value] of Object.entries(queryParams)) {
       params = params.set(key, value);
     }

@@ -9,10 +9,12 @@
     <nav class="nav-lateral">
       <!-- Principal -->
       <p class="etiqueta-seccion-lateral">Principal</p>
-      <a routerLink="/admin/dashboard"  routerLinkActive="activo" class="nav-lateral__item">
-        <span class="material-symbols-outlined">dashboard</span>
-        <span>Dashboard</span>
-      </a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/dashboard"  routerLinkActive="activo" class="nav-lateral__item">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span>Dashboard</span>
+        </a>
+      }
       <a routerLink="/admin/reportes"  routerLinkActive="activo" class="nav-lateral__item">
         <span class="material-symbols-outlined">bar_chart</span>
         <span>Reportes</span>
@@ -32,25 +34,28 @@
         <span class="material-symbols-outlined">output</span>
         <span>Salidas / Bajas</span>
       </a>
-      <a routerLink="/admin/proveedores" routerLinkActive="activo" class="nav-lateral__item">
-        <span class="material-symbols-outlined">local_shipping</span>
-        <span>Proveedores</span>
-      </a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/proveedores" routerLinkActive="activo" class="nav-lateral__item">
+          <span class="material-symbols-outlined">local_shipping</span>
+          <span>Proveedores</span>
+        </a>
+      }
 
-      <!-- Gestión -->
       <p class="etiqueta-seccion-lateral">Gestión</p>
       <a routerLink="/admin/ventas"   routerLinkActive="activo" class="nav-lateral__item">
         <span class="material-symbols-outlined">point_of_sale</span>
         <span>Ventas</span>
       </a>
-      <a routerLink="/admin/usuarios" routerLinkActive="activo" class="nav-lateral__item">
-        <span class="material-symbols-outlined">group</span>
-        <span>Usuarios</span>
-      </a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/usuarios" routerLinkActive="activo" class="nav-lateral__item">
+          <span class="material-symbols-outlined">group</span>
+          <span>Usuarios</span>
+        </a>
+      }
     </nav>
 
     <div class="pie-barra-lateral">
-      <a routerLink="/" class="nav-lateral__item">
+      <a routerLink="/tienda/catalogo" class="nav-lateral__item">
         <span class="material-symbols-outlined">storefront</span>
         <span>Ver Tienda</span>
       </a>
@@ -66,9 +71,37 @@
     <header class="barra-superior-admin">
       <h1 class="barra-superior-admin__titulo">Panel de Administración</h1>
       <div class="barra-superior-admin__acciones">
-        <button class="btn-barra-superior">
-          <span class="material-symbols-outlined">notifications</span>
-        </button>
+        <div style="position: relative;">
+          <button class="btn-barra-superior" style="position: relative;" title="Actividad de hoy" (click)="toggleNotificaciones()">
+            <span class="material-symbols-outlined">notifications</span>
+            @if (notificacionesCount() > 0) {
+              <span style="position: absolute; top: -2px; right: -2px; background: #e53e3e; color: white; border-radius: 50%; font-size: 0.65rem; font-weight: bold; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid white;">
+                {{ notificacionesCount() > 9 ? '9+' : notificacionesCount() }}
+              </span>
+            }
+          </button>
+
+          @if (showNotificaciones()) {
+            <div class="panel-notificaciones">
+              <div class="panel-notificaciones__header">
+                <h3>Notificaciones (Hoy)</h3>
+                <button (click)="toggleNotificaciones()"><span class="material-symbols-outlined">close</span></button>
+              </div>
+              <div class="panel-notificaciones__body">
+                @if (detallesNotificaciones().length === 0) {
+                  <p class="notificacion-vacia">No hay actividad registrada el día de hoy.</p>
+                } @else {
+                  @for (n of detallesNotificaciones(); track n.texto) {
+                    <div class="notificacion-item" [class.alerta]="n.tipo === 'alerta'">
+                      <span class="material-symbols-outlined">{{ n.icono }}</span>
+                      <p>{{ n.texto }}</p>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
         <a routerLink="/login" class="btn-barra-superior">
           <span class="material-symbols-outlined">logout</span>
         </a>

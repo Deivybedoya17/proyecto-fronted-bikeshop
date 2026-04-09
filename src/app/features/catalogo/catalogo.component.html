@@ -36,7 +36,7 @@
             [class.chip-filtro--activo]="tipoActivo() === t"
             (click)="filtrarPorTipo(t)"
           >
-            {{ t }}
+            {{ formatTipo(t) }}
           </button>
         }
       </div>

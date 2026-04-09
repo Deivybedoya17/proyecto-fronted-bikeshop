@@ -10,8 +10,8 @@
       <div class="carrito-exito">
         <span class="material-symbols-outlined icono-exito">check_circle</span>
         <h3>¡Compra realizada con éxito!</h3>
-        <p>Tu pedido ha sido procesado. Gracias por comprar en BikeShop.</p>
-        <a routerLink="/catalogo" class="btn-primario">Seguir comprando</a>
+        <p>{{ mensajeExito() }}</p>
+        <a routerLink="/tienda/catalogo" class="btn-primario">Seguir comprando</a>
       </div>
 
     } @else if (carrito.items().length === 0) {
@@ -20,7 +20,7 @@
         <span class="material-symbols-outlined">remove_shopping_cart</span>
         <h3>No tienes productos en tu carrito</h3>
         <p>Explora nuestro catálogo y encuentra tu bicicleta ideal.</p>
-        <a routerLink="/catalogo" class="btn-primario">Ver catálogo</a>
+        <a routerLink="/tienda/catalogo" class="btn-primario">Ver catálogo</a>
       </div>
 
     } @else {
@@ -80,7 +80,26 @@
             </div>
           }
 
-          <button class="btn-finalizar" (click)="checkout()" [disabled]="loading()">
+          <!-- Email para factura -->
+          <div class="email-factura">
+            <label for="emailCliente">
+              <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">mail</span>
+              Recibir factura por correo <span class="opcional">(opcional)</span>
+            </label>
+            <input
+              id="emailCliente"
+              type="email"
+              [ngModel]="emailCliente()"
+              (ngModelChange)="emailCliente.set($event)"
+              placeholder="cliente@ejemplo.com"
+              autocomplete="email"
+            />
+            @if (emailCliente() && !emailValido()) {
+              <small class="error-email">Ingresa un correo válido</small>
+            }
+          </div>
+
+          <button class="btn-finalizar" (click)="checkout()" [disabled]="loading() || (emailCliente() && !emailValido())">
             @if (loading()) {
               <span class="material-symbols-outlined girar">sync</span>
               Procesando...
@@ -90,7 +109,7 @@
             }
           </button>
 
-          <a routerLink="/catalogo" class="volver-resumen">← Seguir comprando</a>
+          <a routerLink="/tienda/catalogo" class="volver-resumen">← Seguir comprando</a>
         </aside>
       </div>
     }

@@ -1,5 +1,80 @@
 <div class="usuarios">
-  <h2 class="titulo-pagina">Gestión de Usuarios</h2>
+  <div class="encabezado-seccion" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2 class="titulo-pagina" style="margin: 0;">Gestión de Usuarios</h2>
+    <button class="btn-agregar" (click)="abrirForm()" style="background: #0057a8; color: white; padding: 0.5rem 1rem; border-radius: 8px; display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+      <span class="material-symbols-outlined">person_add</span>
+      Nuevo Usuario
+    </button>
+  </div>
+
+  @if (showForm()) {
+    <div class="tarjeta-formulario" style="background: white; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+      <h3 style="margin-bottom: 1.5rem; color: #0f172a; display: flex; align-items: center; gap: 0.5rem;">
+        <span class="material-symbols-outlined" style="color: #0057a8;">person_add</span>
+        Crear nuevo usuario
+      </h3>
+
+      @if (registrarError()) {
+        <div style="background: #fee2e2; color: #b71c1c; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span class="material-symbols-outlined">error</span>
+          {{ registrarError() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+          <!-- Usuario -->
+          <div [class.grupo-error]="formUsuario.invalid && formUsuario.touched">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.875rem;">Nombre de usuario</label>
+            <input type="text" formControlName="usuario" placeholder="juanperez" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; outline: none;"/>
+            @if (formUsuario.hasError('required') && formUsuario.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Requerido.</p> }
+            @if (formUsuario.hasError('minlength') && formUsuario.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Mínimo 3 caracteres.</p> }
+            @if (formUsuario.hasError('pattern') && formUsuario.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Solo alfanuméricos.</p> }
+          </div>
+
+          <!-- Documento -->
+          <div [class.grupo-error]="formDocument.invalid && formDocument.touched">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.875rem;">Documento</label>
+            <input type="text" formControlName="document" placeholder="Número de id" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; outline: none;"/>
+            @if (formDocument.hasError('required') && formDocument.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Requerido.</p> }
+            @if (formDocument.hasError('minlength') && formDocument.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Mínimo 5 caracteres.</p> }
+            @if (formDocument.hasError('pattern') && formDocument.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Solo números.</p> }
+          </div>
+
+          <!-- Teléfono -->
+          <div [class.grupo-error]="formTelefono.invalid && formTelefono.touched">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.875rem;">Teléfono</label>
+            <input type="text" formControlName="telefono" placeholder="+57 300..." style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; outline: none;"/>
+            @if (formTelefono.hasError('pattern') && formTelefono.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Formato inválido.</p> }
+          </div>
+
+          <!-- Contraseña -->
+          <div [class.grupo-error]="formPassword.invalid && formPassword.touched">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.875rem;">Contraseña</label>
+            <div style="position: relative;">
+              <input [type]="showPass() ? 'text' : 'password'" formControlName="password" placeholder="••••••••" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; outline: none;"/>
+              <button type="button" (click)="togglePassword()" style="position: absolute; right: 10px; top: 12px; background: none; border: none; color: #64748b; cursor: pointer;">
+                <span class="material-symbols-outlined" style="font-size: 20px;">{{ showPass() ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+            @if (formPassword.hasError('required') && formPassword.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Requerida.</p> }
+            @if (formPassword.hasError('minlength') && formPassword.touched) { <p style="color: #E53935; font-size: 0.75rem; margin-top: 0.25rem;">Mínimo 6 caracteres.</p> }
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+          <button type="button" (click)="cerrarForm()" style="background: #f1f5f9; color: #64748b; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600;">Cancelar</button>
+          <button type="submit" [disabled]="saving()" style="background: #0057a8; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+            @if (saving()) {
+              <span class="material-symbols-outlined girar">sync</span> Creando...
+            } @else {
+              <span class="material-symbols-outlined">save</span> Guardar Usuario
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
 
   @if (loading()) {
     <p class="mensaje-carga">

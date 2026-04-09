@@ -34,44 +34,32 @@ export class EntradasComponent implements OnInit {
   protected filterProveedor = '';
   protected filterFechaInicio = '';
   protected filterFechaFin = '';
-
-  // ── Panel desplegable ──
-  protected readonly expandedDate = signal<string | null>(null);
-
-  // ── Items filtrados y ordenados por fecha desc ──
   protected readonly filteredItems = computed(() => {
     let data = [...this.items()];
-
-    // Filtro por proveedor
     if (this.filterProveedor) {
       data = data.filter(e => e.nombreProveedor === this.filterProveedor);
     }
-
-    // Filtro por rango de fechas
     if (this.filterFechaInicio) {
       data = data.filter(e => e.fecha.substring(0, 10) >= this.filterFechaInicio);
     }
     if (this.filterFechaFin) {
       data = data.filter(e => e.fecha.substring(0, 10) <= this.filterFechaFin);
     }
-
-    // Ordenar por fecha descendente
     data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
     return data;
   });
 
-  // ── Agrupar por fecha (día) ──
-  protected readonly groupedByDate = computed(() => {
-    const groups = new Map<string, EntradaDtoResponse[]>();
-    for (const entry of this.filteredItems()) {
-      const dateKey = entry.fecha.substring(0, 10); // 'yyyy-MM-dd'
-      if (!groups.has(dateKey)) groups.set(dateKey, []);
-      groups.get(dateKey)!.push(entry);
-    }
-    return groups;
+  protected readonly currentPage = signal(1);
+  protected readonly pageSize = signal(5);
+
+  protected readonly totalPages = computed(() => {
+    return Math.max(1, Math.ceil(this.filteredItems().length / this.pageSize()));
   });
 
-  protected readonly groupKeys = computed(() => Array.from(this.groupedByDate().keys()));
+  protected readonly paginatedItems = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredItems().slice(start, start + this.pageSize());
+  });
 
   // ── Lista única de proveedores para el filtro ──
   protected readonly proveedoresUnicos = computed(() => {
@@ -115,19 +103,18 @@ export class EntradasComponent implements OnInit {
   private load(): void {
     this.loading.set(true);
     this.svc.listarTodas().subscribe({
-      next: data => { this.items.set(data); this.loading.set(false); },
+      next: data => { 
+        this.items.set(data); 
+        this.loading.set(false);
+        this.currentPage.set(1);
+      },
       error: ()   => this.loading.set(false)
     });
   }
 
-  toggleFecha(fecha: string): void {
-    this.expandedDate.update(current => current === fecha ? null : fecha);
-  }
-
   aplicarFiltros(): void {
-    // Los computed() se recalculan automáticamente al cambiar los filtros
-    // Forzamos la re-evaluación reseteando los items con una copia
     this.items.update(list => [...list]);
+    this.currentPage.set(1);
   }
 
   limpiarFiltros(): void {
@@ -135,6 +122,7 @@ export class EntradasComponent implements OnInit {
     this.filterFechaInicio = '';
     this.filterFechaFin = '';
     this.items.update(list => [...list]);
+    this.currentPage.set(1);
   }
 
   abrirForm() {

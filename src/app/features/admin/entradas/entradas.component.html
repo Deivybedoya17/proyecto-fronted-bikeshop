@@ -101,7 +101,7 @@
     </div>
   }
 
-  <!-- ── PANELES AGRUPADOS POR FECHA ─────────── -->
+  <!-- ── TABLA DE ENTRADAS ─────────── -->
   @if (loading()) {
     <p class="mensaje-carga"><span class="material-symbols-outlined girar">sync</span> Cargando entradas...</p>
   } @else if (filteredItems().length === 0) {
@@ -110,40 +110,44 @@
       <p>No hay entradas que coincidan con los filtros.</p>
     </div>
   } @else {
-    <p class="resultado-filtro">{{ filteredItems().length }} entrada(s) encontrada(s)</p>
+    <div class="contenedor-tabla">
+      <table class="tabla-datos">
+        <thead>
+          <tr><th>Fecha y Hora</th><th>Bicicleta</th><th>Marca</th><th>Cantidad</th><th>Proveedor</th><th>Usuario</th></tr>
+        </thead>
+        <tbody>
+          @for (e of paginatedItems(); track e.idEntrada) {
+            <tr>
+              <td>{{ e.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td><code>{{ e.codigoBicicleta }}</code></td>
+              <td>{{ e.marcaBicicleta }}</td>
+              <td><span class="chip-cantidad">+{{ e.cantidad }}</span></td>
+              <td>{{ e.nombreProveedor }}</td>
+              <td>{{ e.nombreUsuario }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
 
-    @for (dateKey of groupKeys(); track dateKey) {
-      <div class="panel-fecha">
-        <button class="panel-fecha__header" (click)="toggleFecha(dateKey)" [class.panel-fecha__header--abierto]="expandedDate() === dateKey">
-          <div class="panel-fecha__info">
-            <span class="material-symbols-outlined">calendar_today</span>
-            <span class="panel-fecha__titulo">{{ dateKey | date:'EEEE dd/MM/yyyy' }}</span>
-            <span class="panel-fecha__badge">{{ groupedByDate().get(dateKey)!.length }} entrada(s)</span>
-          </div>
-          <span class="material-symbols-outlined panel-fecha__flecha" [class.rotado]="expandedDate() === dateKey">expand_more</span>
-        </button>
-
-        @if (expandedDate() === dateKey) {
-          <div class="panel-fecha__body">
-            <table class="tabla-datos">
-              <thead>
-                <tr><th>Hora</th><th>Bicicleta</th><th>Marca</th><th>Cantidad</th><th>Proveedor</th><th>Usuario</th></tr>
-              </thead>
-              <tbody>
-                @for (e of groupedByDate().get(dateKey)!; track e.idEntrada) {
-                  <tr>
-                    <td>{{ e.fecha | date:'HH:mm' }}</td>
-                    <td><code>{{ e.codigoBicicleta }}</code></td>
-                    <td>{{ e.marcaBicicleta }}</td>
-                    <td><span class="chip-cantidad">+{{ e.cantidad }}</span></td>
-                    <td>{{ e.nombreProveedor }}</td>
-                    <td>{{ e.nombreUsuario }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
+    <!-- Paginación -->
+    @if (filteredItems().length > 0) {
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding: 0.5rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">
+          Página {{ currentPage() }} de {{ totalPages() }} ({{ filteredItems().length }} resultados)
+        </span>
+        <div style="display: flex; gap: 0.5rem;">
+          <button (click)="currentPage.set(currentPage() - 1)" [disabled]="currentPage() === 1"
+                  style="padding: 0.25rem 0.5rem; border: 1px solid #e2e8f0; background: white; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 1; transition: background 0.2s;"
+                  [style.opacity]="currentPage() === 1 ? '0.5' : '1'">
+            <span class="material-symbols-outlined" style="font-size: 18px;">chevron_left</span>
+          </button>
+          <button (click)="currentPage.set(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+                  style="padding: 0.25rem 0.5rem; border: 1px solid #e2e8f0; background: white; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 1; transition: background 0.2s;"
+                  [style.opacity]="currentPage() === totalPages() ? '0.5' : '1'">
+            <span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span>
+          </button>
+        </div>
       </div>
     }
   }

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CurrencyPipe, DatePipe, SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VentaService } from '../../../core/services/venta.service';
+import { ReporteService } from '../../../core/services/reporte.service';
 import { VentaDtoResponse } from '../../../core/models/venta.dto';
 
 @Component({
@@ -13,6 +14,7 @@ import { VentaDtoResponse } from '../../../core/models/venta.dto';
 })
 export class VentasComponent implements OnInit {
   private readonly svc     = inject(VentaService);
+  private readonly reporteSvc = inject(ReporteService);
   protected readonly ventas = signal<VentaDtoResponse[]>([]);
   protected readonly loading = signal(true);
   protected readonly expandido = signal<string | null>(null);
@@ -89,5 +91,9 @@ export class VentasComponent implements OnInit {
     this.filterFechaInicio = '';
     this.filterFechaFin = '';
     this.aplicarFiltros();
+  }
+
+  descargarFactura(idVenta: string): void {
+    this.reporteSvc.exportarFacturaPdf(idVenta);
   }
 }

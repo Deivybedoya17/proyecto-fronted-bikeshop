@@ -13,7 +13,7 @@
       <a [routerLink]="auth.isLoggedIn() ? '/admin' : '/login'" class="acciones-encabezado__btn" title="Mi cuenta">
         <span class="material-symbols-outlined">person</span>
       </a>
-      <a routerLink="/carrito" class="acciones-encabezado__btn acciones-encabezado__carrito" title="Carrito">
+      <a routerLink="/tienda/carrito" class="acciones-encabezado__btn acciones-encabezado__carrito" title="Carrito">
         <span class="material-symbols-outlined">shopping_cart</span>
         @if (carrito.count() > 0) {
         <span class="insignia-carrito">{{ carrito.count() }}</span>
@@ -41,8 +41,8 @@
     <div>
       <h5 class="pie-encabezado">Enlaces Rápidos</h5>
       <ul class="pie-enlaces">
-        <li><a routerLink="/">Inicio</a></li>
-        <li><a routerLink="/catalogo">Catálogo</a></li>
+        <li><a routerLink="/tienda/catalogo">Inicio</a></li>
+        <li><a routerLink="/tienda/catalogo">Catálogo</a></li>
         <li><a href="#">Ofertas</a></li>
         <li><a href="#">Sobre Nosotros</a></li>
       </ul>

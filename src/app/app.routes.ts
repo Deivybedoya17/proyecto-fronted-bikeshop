@@ -2,14 +2,24 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
-  // ── eCommerce layout ──────────────────────────────────────────────────
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  // ── Auth ──────────────────────────────────────────────────────────────
   {
-    path: '',
+    path: 'login',
+    loadComponent: () => import('./features/auth/auth.component').then(m => m.AuthComponent),
+  },
+
+  // ── Tienda Layout ──────────────────────────────────────────────────
+  {
+    path: 'tienda',
     loadComponent: () => import('./core/layout/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
+    canActivate: [authGuard],
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+        redirectTo: 'catalogo',
+        pathMatch: 'full'
       },
       {
         path: 'catalogo',
@@ -20,16 +30,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/carrito/carrito.component').then(m => m.CarritoComponent),
       },
     ]
-  },
-
-  // ── Auth ──────────────────────────────────────────────────────────────
-  {
-    path: 'login',
-    loadComponent: () => import('./features/auth/auth.component').then(m => m.AuthComponent),
-  },
-  {
-    path: 'registro',
-    loadComponent: () => import('./features/registro/registro.component').then(m => m.RegistroComponent),
   },
 
   // ── Admin Panel ───────────────────────────────────────────────────────
@@ -74,5 +74,5 @@ export const routes: Routes = [
     ]
   },
 
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: 'login' }
 ];

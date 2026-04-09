@@ -11,14 +11,14 @@
     </div>
 
     <span class="tarjeta-producto__etiqueta" style="z-index: 2;">
-      {{ bicicleta().tipo }}
+      {{ formatTipo(bicicleta().tipo) }}
     </span>
   </div>
 
 
   <!-- Info -->
   <div class="tarjeta-producto__cuerpo">
-    <span class="tarjeta-producto__categoria">{{ bicicleta().tipo }}</span>
+    <span class="tarjeta-producto__categoria">{{ formatTipo(bicicleta().tipo) }}</span>
     <h4 class="tarjeta-producto__nombre">{{ bicicleta().marca }} {{ bicicleta().modelo }}</h4>
     <p class="tarjeta-producto__codigo">Cód: {{ bicicleta().codigo }}</p>
     <div class="tarjeta-producto__fila-precio">

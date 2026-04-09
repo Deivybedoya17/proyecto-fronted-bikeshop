@@ -62,4 +62,8 @@ export class CatalogoComponent implements OnInit {
   actualizarBusqueda(valor: string): void {
     this.busqueda.set(valor);
   }
+
+  formatTipo(t: string): string {
+    return t === 'MONTANA' ? 'MONTAÑA' : t;
+  }
 }

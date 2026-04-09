@@ -60,7 +60,7 @@
             <select id="tipo" class="campo-input" formControlName="tipo">
               <option value="">Seleccionar tipo...</option>
               @for (t of tipos; track t) {
-                <option [value]="t">{{ t }}</option>
+                <option [value]="t">{{ formatTipo(t) }}</option>
               }
             </select>
             @if (form.get('tipo')!.invalid && form.get('tipo')!.touched) {
@@ -119,7 +119,7 @@
               </td>
               <td><strong>{{ b.marca }}</strong></td>
               <td>{{ b.modelo }}</td>
-              <td><span class="insignia">{{ b.tipo }}</span></td>
+              <td><span class="insignia">{{ formatTipo(b.tipo) }}</span></td>
               <td>{{ b.valorUnitario | currency:'USD' }}</td>
               <td [class.texto-rojo]="b.stock <= 5" [class.texto-verde]="b.stock > 5">{{ b.stock }}</td>
               <td>

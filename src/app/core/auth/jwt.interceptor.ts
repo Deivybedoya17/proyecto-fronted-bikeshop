@@ -1,5 +1,6 @@
 import { HttpInterceptorFn, HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { tap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 export const jwtInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
@@ -12,5 +13,14 @@ export const jwtInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
     });
   }
 
-  return next(req);
+  return next(req).pipe(
+    tap({
+      error: (err) => {
+        // Si el token expiró o es inválido, cerrar sesión y redirigir al login
+        if (err.status === 401) {
+          auth.logout();
+        }
+      }
+    })
+  );
 };

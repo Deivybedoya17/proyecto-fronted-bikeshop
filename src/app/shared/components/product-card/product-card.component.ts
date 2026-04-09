@@ -17,4 +17,8 @@ export class ProductCardComponent {
   protected agregarAlCarrito(): void {
     this.carrito.agregar(this.bicicleta());
   }
+
+  formatTipo(t: string): string {
+    return t === 'MONTANA' ? 'MONTAÑA' : t;
+  }
 }
